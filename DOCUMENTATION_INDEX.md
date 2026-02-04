@@ -1,270 +1,282 @@
-# 📚 Documentation Index
+# 📚 Harit Finance - Complete Documentation Index
 
-## Quick Navigation Guide
-
-All documentation files organized by purpose.
+**Quick Links:** [README](README.md) | [Quick Start](QUICK_START.md) | [Deployment](DEPLOYMENT_GUIDE.md) | [Testing](TESTING_GUIDE.md)
 
 ---
 
-## 🎯 START HERE (New Users)
+## 🎯 Start Here
 
-### 1. **START_HERE.md** ⭐
-**Purpose:** Main entry point - tells you which guide to read  
-**Read this:** First, before anything else  
-**Time:** 5 minutes  
-**Who:** Everyone
+**New to the project?** Follow this path:
 
----
-
-## 🚀 Deployment Guides
-
-### 2. **QUICK_START.md** ⭐⭐⭐
-**Purpose:** Fast 30-minute deployment to Render.com  
-**Read this:** When you want to deploy right now  
-**Time:** 30-60 minutes (includes deployment)  
-**Who:** Beginners who want the fastest path  
-**Difficulty:** Easy ⭐
-
-### 3. **BEGINNER_CHECKLIST.md** ⭐⭐
-**Purpose:** Step-by-step checklist format  
-**Read this:** If you prefer checklists over prose  
-**Time:** 30-60 minutes  
-**Who:** Beginners who like checkboxes  
-**Difficulty:** Easy ⭐
-
-### 4. **DEPLOYMENT_GUIDE.md** ⭐⭐
-**Purpose:** Comprehensive deployment guide with all options  
-**Read this:** When you want to understand everything  
-**Time:** 1-2 hours  
-**Who:** Those who want deep understanding  
-**Difficulty:** Moderate ⭐⭐
+1. **[README.md](README.md)** - Project overview and quick start
+2. **[QUICK_START.md](QUICK_START.md)** - Detailed setup instructions
+3. **[TESTING_GUIDE.md](TESTING_GUIDE.md)** - Understanding the tests
+4. **[DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md)** - Deploy to production
 
 ---
 
-## 📖 Understanding Guides
+## 📖 Documentation by Topic
 
-### 5. **SETUP_SUMMARY.md** ⭐⭐
-**Purpose:** Explains what was changed and why  
-**Read this:** After deploying, to understand the changes  
-**Time:** 20 minutes  
-**Who:** Those who want to understand the improvements  
-**Difficulty:** Moderate ⭐⭐
+### 🚀 Getting Started
 
-### 6. **CHANGES_SUMMARY.txt** ⭐
-**Purpose:** Quick bullet-point list of all changes  
-**Read this:** For a quick overview  
-**Time:** 5 minutes  
-**Who:** Everyone (quick reference)  
-**Difficulty:** Easy ⭐
+| Document | Purpose | When to Read |
+|----------|---------|--------------|
+| **[README.md](README.md)** | Project overview, features, quick start | First time here |
+| **[QUICK_START.md](QUICK_START.md)** | Detailed installation and setup | Setting up locally |
+| **[.env.example](.env.example)** | Environment variable template | Configuration |
 
----
+### 🧪 Testing
 
-## 🔧 Technical Guides
+| Document | Purpose | When to Read |
+|----------|---------|--------------|
+| **[TESTING_GUIDE.md](TESTING_GUIDE.md)** | Complete testing guide for beginners | Learning about tests |
+| **[TEST_SUMMARY.md](TEST_SUMMARY.md)** | Quick reference of all 60 tests | Quick lookup |
+| **[tests/README.md](tests/README.md)** | Technical test documentation | Writing tests |
 
-### 7. **README.md**
-**Purpose:** Original project documentation  
-**Read this:** To understand how the app works  
-**Time:** 15 minutes  
-**Who:** Developers wanting to modify the code  
-**Difficulty:** Moderate ⭐⭐
+**Test Files:**
+- `tests/test_auth.py` - Authentication tests
+- `tests/test_accounts.py` - Account CRUD tests
+- `tests/test_transactions.py` - Transaction & transfer tests
+- `tests/test_categories.py` - Category tests
+- `tests/test_models.py` - Database model tests
+- `tests/test_user_separation.py` - Security tests
 
-### 8. **PYTHON_COMPATIBILITY_NOTE.md**
-**Purpose:** Explains Python 3.14 compatibility issue  
-**Read this:** Only if local testing fails  
-**Time:** 5 minutes  
-**Who:** Those having local testing issues  
-**Difficulty:** Easy ⭐
+### 🚢 Deployment
 
----
+| Document | Purpose | When to Read |
+|----------|---------|--------------|
+| **[DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md)** | Deploy to Render.com | Going to production |
+| **[render.yaml](render.yaml)** | Render configuration | Deployment setup |
+| **[runtime.txt](runtime.txt)** | Python version for Render | Deployment issues |
+| **[Procfile](Procfile)** | Gunicorn configuration | Web server setup |
 
-## 📄 Configuration Files
+### 🔧 Development Tools
 
-These are not documentation, but important files for deployment:
-
-- **render.yaml** - Render.com configuration
-- **Procfile** - Heroku/Railway configuration
-- **runtime.txt** - Python version (3.12.0)
-- **requirements.txt** - Python dependencies
-- **.env.example** - Environment variables template
-- **.gitignore** - Git ignore rules
-- **.dockerignore** - Docker ignore rules
+| Document | Purpose | When to Read |
+|----------|---------|--------------|
+| **[POETRY_GUIDE.md](POETRY_GUIDE.md)** | Using Poetry for dependencies | Managing packages |
+| **[pyproject.toml](pyproject.toml)** | Poetry configuration | Adding dependencies |
+| **[requirements.txt](requirements.txt)** | Pip dependencies (backup) | Pip installation |
 
 ---
 
-## 🎓 Reading Paths
+## 🗂️ Complete File Reference
 
-### Path A: "I Want to Deploy NOW" (Fastest)
-1. START_HERE.md (5 min)
-2. QUICK_START.md (follow steps, 30-60 min)
-3. Done! 🎉
+### Core Application Files
 
-**Total time:** 35-65 minutes
+```
+app.py              # Main application entry point
+config.py           # Configuration settings (dev/test/prod)
+models.py           # Database models (User, Account, Transaction, Category)
+utils.py            # Utility functions (currency symbols, etc.)
+middleware.py       # Security headers
+seed_data.py        # Sample data for development
+```
 
----
+### Routes (URL Handlers)
 
-### Path B: "I Want to Understand First"
-1. START_HERE.md (5 min)
-2. SETUP_SUMMARY.md (20 min)
-3. QUICK_START.md (30-60 min)
-4. DEPLOYMENT_GUIDE.md (as needed)
+```
+routes/
+├── main.py         # Dashboard and home page
+├── auth.py         # Login, register, logout
+├── accounts.py     # Account CRUD operations
+├── transactions.py # Transaction CRUD + transfer feature
+└── categories.py   # Category CRUD operations
+```
 
-**Total time:** 1-2 hours
+### Templates (HTML)
 
----
+```
+templates/
+├── base.html              # Base template with navigation
+├── index.html             # Dashboard
+├── auth/
+│   ├── login.html        # Login page
+│   └── register.html     # Registration page
+├── accounts/
+│   ├── list.html         # View all accounts
+│   ├── add.html          # Create account
+│   └── edit.html         # Edit account
+├── transactions/
+│   ├── list.html         # View all transactions
+│   ├── add.html          # Record transaction
+│   ├── edit.html         # Edit transaction (with account switcher!)
+│   └── transfer.html     # Transfer between accounts (NEW!)
+└── categories/
+    ├── list.html         # View categories
+    ├── add.html          # Create category
+    ├── edit.html         # Edit category
+    └── delete.html       # Delete category (with reassignment)
+```
 
-### Path C: "I'm Technical and Want Everything"
-1. README.md (15 min)
-2. SETUP_SUMMARY.md (20 min)
-3. DEPLOYMENT_GUIDE.md (1-2 hours)
-4. QUICK_START.md (deploy)
+### Tests
 
-**Total time:** 2-3 hours
+```
+tests/
+├── test_auth.py          # 9 tests - Authentication
+├── test_accounts.py      # 11 tests - Account management
+├── test_transactions.py  # 13 tests - Transactions & transfers
+├── test_categories.py    # 11 tests - Categories
+├── test_models.py        # 10 tests - Database models
+└── test_user_separation.py  # 10 tests - Security
+```
 
----
+### Configuration Files
 
-### Path D: "Just Give Me a Checklist"
-1. START_HERE.md (5 min)
-2. BEGINNER_CHECKLIST.md (follow checkboxes)
-3. Done! 🎉
-
-**Total time:** 30-60 minutes
-
----
-
-## 🆘 Troubleshooting Index
-
-### Issue: "I don't know where to start"
-**Read:** START_HERE.md
-
-### Issue: "I want to deploy quickly"
-**Read:** QUICK_START.md
-
-### Issue: "I don't understand what changed"
-**Read:** SETUP_SUMMARY.md
-
-### Issue: "Local testing isn't working"
-**Read:** PYTHON_COMPATIBILITY_NOTE.md
-
-### Issue: "Deployment failed"
-**Read:** Troubleshooting sections in:
-- QUICK_START.md
-- DEPLOYMENT_GUIDE.md
-
-### Issue: "I want to understand the code"
-**Read:** README.md
-
----
-
-## 📊 Document Comparison
-
-| Document | Length | Difficulty | Purpose | When to Read |
-|----------|--------|------------|---------|--------------|
-| START_HERE.md | Medium | Easy | Navigation | First |
-| QUICK_START.md | Long | Easy | Deploy fast | When ready to deploy |
-| BEGINNER_CHECKLIST.md | Medium | Easy | Step-by-step | If you like checklists |
-| DEPLOYMENT_GUIDE.md | Very Long | Moderate | Comprehensive | To understand deeply |
-| SETUP_SUMMARY.md | Long | Moderate | Understand changes | After deploying |
-| CHANGES_SUMMARY.txt | Short | Easy | Quick overview | Anytime (reference) |
-| README.md | Medium | Moderate | Code understanding | To modify code |
-| PYTHON_COMPATIBILITY_NOTE.md | Short | Easy | Version issues | If testing fails |
-
----
-
-## 💡 Quick Tips
-
-### For Visual Learners
-Start with CHANGES_SUMMARY.txt (bullet points), then QUICK_START.md
-
-### For Detail-Oriented People
-Read everything in order: START_HERE → SETUP_SUMMARY → DEPLOYMENT_GUIDE → QUICK_START
-
-### For "Just Do It" People
-QUICK_START.md - skip everything else for now
-
-### For Anxious Beginners
-BEGINNER_CHECKLIST.md - checkboxes give you confidence
+```
+pyproject.toml      # Poetry dependencies and config
+poetry.lock         # Locked dependency versions
+requirements.txt    # Pip dependencies (fallback)
+runtime.txt         # Python version (3.12)
+render.yaml         # Render.com deployment config
+Procfile            # Gunicorn web server config
+.env.example        # Environment variables template
+.env                # Your local environment (not in git)
+.gitignore          # Files to exclude from git
+.python-version     # Python version for this project
+```
 
 ---
 
-## 🎯 By Goal
+## 🎯 Common Tasks
 
-### Goal: Deploy my app online
-**Documents:** QUICK_START.md or BEGINNER_CHECKLIST.md
+### I Want To...
 
-### Goal: Understand industry standards
-**Documents:** SETUP_SUMMARY.md, DEPLOYMENT_GUIDE.md
-
-### Goal: Learn about security
-**Documents:** DEPLOYMENT_GUIDE.md (Security section)
-
-### Goal: Choose hosting platform
-**Documents:** DEPLOYMENT_GUIDE.md (Part 2)
-
-### Goal: Fix deployment errors
-**Documents:** QUICK_START.md (Troubleshooting), DEPLOYMENT_GUIDE.md (Part 3)
-
-### Goal: Understand the code
-**Documents:** README.md
+| Task | Documentation | File to Edit |
+|------|---------------|--------------|
+| **Set up locally** | [QUICK_START.md](QUICK_START.md) | - |
+| **Run tests** | [TESTING_GUIDE.md](TESTING_GUIDE.md) | - |
+| **Deploy to production** | [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md) | - |
+| **Add a new route** | Look at `routes/` examples | Create new file in `routes/` |
+| **Add a new page** | Look at `templates/` examples | Create new file in `templates/` |
+| **Add a database field** | See `models.py` | Edit `models.py` |
+| **Change app name** | - | Edit `templates/base.html` |
+| **Add dependency** | [POETRY_GUIDE.md](POETRY_GUIDE.md) | Run `poetry add <package>` |
+| **Change currency** | See `utils.py` | Edit `utils.py` |
+| **Modify transfer feature** | See `routes/transactions.py` | Edit `routes/transactions.py` |
 
 ---
 
-## 📝 Summary
+## 🚦 Quick Commands Reference
 
-**Total documentation files:** 8 main guides  
-**Recommended starting point:** START_HERE.md  
-**Fastest deployment:** QUICK_START.md  
-**Most comprehensive:** DEPLOYMENT_GUIDE.md  
-**Easiest format:** BEGINNER_CHECKLIST.md
+### Development
+```bash
+poetry run python app.py              # Run app locally
+poetry run pytest tests/ -v           # Run all tests
+poetry run pytest tests/ -k transfer  # Run transfer tests only
+poetry env info                       # Check Python version
+```
 
----
+### Dependency Management
+```bash
+poetry install                        # Install all dependencies
+poetry add flask-something            # Add new package
+poetry update                         # Update all packages
+poetry show                           # List installed packages
+poetry env list                       # List virtual environments
+```
 
-## ✨ Special Recommendations
-
-### If you're feeling overwhelmed:
-1. Take a deep breath
-2. Open START_HERE.md
-3. Follow QUICK_START.md
-4. You've got this! 💪
-
-### If you're confident:
-1. Skim START_HERE.md
-2. Jump to QUICK_START.md
-3. Deploy in 30 minutes
-4. Celebrate! 🎉
-
-### If you want to learn:
-1. Read START_HERE.md
-2. Read SETUP_SUMMARY.md
-3. Read DEPLOYMENT_GUIDE.md
-4. Then deploy with QUICK_START.md
-5. Keep learning! 📚
+### Testing
+```bash
+poetry run pytest tests/ -v                          # All tests, verbose
+poetry run pytest tests/test_transactions.py -v      # One file
+poetry run pytest tests/ -k "transfer" -v            # By keyword
+poetry run pytest tests/ -x                          # Stop at first failure
+poetry run pytest tests/ --lf                        # Run last failed
+```
 
 ---
 
-## 🔗 Cross-References
+## 📊 Project Statistics
 
-Each document references other relevant documents. Follow these links:
-
-- START_HERE → QUICK_START
-- QUICK_START → BEGINNER_CHECKLIST, DEPLOYMENT_GUIDE
-- SETUP_SUMMARY → DEPLOYMENT_GUIDE
-- DEPLOYMENT_GUIDE → All other guides
-- PYTHON_COMPATIBILITY_NOTE → QUICK_START
-
----
-
-## 📞 Quick Help
-
-**Lost?** → START_HERE.md  
-**Need to deploy?** → QUICK_START.md  
-**Want to understand?** → SETUP_SUMMARY.md  
-**Having errors?** → Check troubleshooting sections  
-**Local testing fails?** → PYTHON_COMPATIBILITY_NOTE.md
+- **Total Lines of Code**: ~3,500
+- **Routes**: 25+ endpoints
+- **Templates**: 15 HTML files
+- **Tests**: 60 comprehensive tests
+- **Test Coverage**: 88% (53/60 passing)
+- **Documentation**: 6 main guides
+- **Supported Currencies**: 6 (USD, THB, EUR, GBP, JPY, CAD)
 
 ---
 
-**Pro Tip:** Bookmark this index for quick navigation! 🔖
+## 🔍 Finding Information
+
+### By Feature
+
+| Feature | Code | Template | Tests |
+|---------|------|----------|-------|
+| **Authentication** | `routes/auth.py` | `templates/auth/` | `test_auth.py` |
+| **Accounts** | `routes/accounts.py` | `templates/accounts/` | `test_accounts.py` |
+| **Transactions** | `routes/transactions.py` | `templates/transactions/` | `test_transactions.py` |
+| **Transfers** | `routes/transactions.py` | `templates/transactions/transfer.html` | `test_transactions.py` |
+| **Categories** | `routes/categories.py` | `templates/categories/` | `test_categories.py` |
+| **Dashboard** | `routes/main.py` | `templates/index.html` | - |
+
+### By Technology
+
+| Technology | Where | Documentation |
+|------------|-------|---------------|
+| **Flask** | `app.py`, `routes/` | [Flask Docs](https://flask.palletsprojects.com/) |
+| **SQLAlchemy** | `models.py` | [SQLAlchemy Docs](https://docs.sqlalchemy.org/) |
+| **Pytest** | `tests/` | [TESTING_GUIDE.md](TESTING_GUIDE.md) |
+| **Poetry** | `pyproject.toml` | [POETRY_GUIDE.md](POETRY_GUIDE.md) |
+| **Tailwind CSS** | `templates/base.html` | [Tailwind Docs](https://tailwindcss.com/) |
 
 ---
 
-Made with ❤️ for beginners. You've got this! 🚀
+## 📝 Documentation Maintenance
+
+### Active Documents (Keep Updated)
+- ✅ README.md
+- ✅ QUICK_START.md
+- ✅ DEPLOYMENT_GUIDE.md
+- ✅ TESTING_GUIDE.md
+- ✅ TEST_SUMMARY.md
+- ✅ POETRY_GUIDE.md
+- ✅ This file (DOCUMENTATION_INDEX.md)
+
+### Reference Documents (Update as Needed)
+- tests/README.md
+- .env.example
+- render.yaml
+- pyproject.toml
+
+---
+
+## 🆘 Troubleshooting
+
+| Problem | Solution | Documentation |
+|---------|----------|---------------|
+| **"pytest not found"** | Use `poetry run pytest` | [TESTING_GUIDE.md](TESTING_GUIDE.md) |
+| **Python version issues** | Check `poetry env info` | [POETRY_GUIDE.md](POETRY_GUIDE.md) |
+| **Database errors** | Delete `finance.db`, restart | [QUICK_START.md](QUICK_START.md) |
+| **Import errors** | Run `poetry install` | [POETRY_GUIDE.md](POETRY_GUIDE.md) |
+| **Deployment fails** | Check logs on Render | [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md) |
+| **Tests failing** | See test output | [TESTING_GUIDE.md](TESTING_GUIDE.md) |
+
+---
+
+## 🎓 Learning Resources
+
+### For Beginners
+1. Read [README.md](README.md) - Understand what the app does
+2. Follow [QUICK_START.md](QUICK_START.md) - Get it running
+3. Read [TESTING_GUIDE.md](TESTING_GUIDE.md) - Understand testing
+4. Browse code files with comments
+
+### For Contributors
+1. Read all documentation above
+2. Run tests: `poetry run pytest tests/ -v`
+3. Study test files to understand features
+4. Look at `routes/` and `templates/` for patterns
+
+---
+
+**Last Updated**: February 2026  
+**App Version**: 1.0.0  
+**Python Version**: 3.12  
+**Flask Version**: 3.0
+
+---
+
+**Need help?** Check the specific documentation file for your topic, or read the code comments!

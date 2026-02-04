@@ -1,126 +1,269 @@
-# Personal Finance App
+# 💰 Harit Finance
 
-A simple personal finance tracking app built with Flask - perfect for learning web development!
+A modern personal finance tracking application built with Flask. Track your expenses, income, accounts, and transfers across multiple currencies.
 
-## Features
+[![Tests](https://img.shields.io/badge/tests-53%2F60%20passing-brightgreen)]()
+[![Python](https://img.shields.io/badge/python-3.10%2B-blue)]()
+[![Flask](https://img.shields.io/badge/flask-3.0-orange)]()
 
-- Track income and expenses
-- Manage multiple accounts (bank, cash, credit cards)
-- Categorize transactions
-- View spending summaries
-- Modern, dark-themed UI
+## ✨ Features
 
-## Project Structure
+- 📊 **Multi-Account Management** - Track bank accounts, savings, cash, credit cards
+- 💸 **Transactions** - Record income and expenses with categories
+- 🔄 **Transfers** - Move money between accounts seamlessly
+- 🌍 **Multi-Currency** - Support for USD, THB, EUR, GBP, JPY, CAD
+- 📈 **Dashboard** - Visual overview with charts and statistics
+- 🏷️ **Categories** - Organize transactions with custom icons and colors
+- 🔐 **Secure** - Password hashing, user data separation, authentication
+- ✅ **Tested** - 60 comprehensive unit tests
+
+## 🚀 Quick Start
+
+### Prerequisites
+- Python 3.10 or higher
+- Poetry (for dependency management)
+
+### Installation
+
+1. **Clone and enter directory**
+   ```bash
+   cd /Users/harit/Projects/personal_finance_app
+   ```
+
+2. **Install dependencies**
+   ```bash
+   poetry install
+   ```
+
+3. **Set up environment variables**
+   ```bash
+   cp .env.example .env
+   # Edit .env with your settings
+   ```
+
+4. **Run the application**
+   ```bash
+   poetry run python app.py
+   ```
+
+5. **Open in browser**
+   ```
+   http://localhost:5001
+   ```
+
+That's it! 🎉
+
+> **📖 Need more details?** See [QUICK_START.md](QUICK_START.md) for detailed setup instructions.
+
+## 📱 Usage
+
+### Creating Your First Account
+1. Register/Login to your account
+2. Click "Add Account" 
+3. Choose account type (Bank, Savings, Cash, Credit Card)
+4. Set initial balance
+5. Start tracking!
+
+### Recording Transactions
+- **Expense**: `Transactions → Add Transaction → Type: Expense`
+- **Income**: `Transactions → Add Transaction → Type: Income`
+- **Transfer**: `Transactions → Transfer` (move money between accounts)
+
+### Switching Accounts
+When editing a transaction, you can now change which account it belongs to. The balances update automatically!
+
+## 🗂️ Project Structure
 
 ```
 personal_finance_app/
-├── app.py              # Main entry point - starts the Flask server
-├── config.py           # Configuration settings (database path, secret key)
-├── models.py           # Database models (User, Account, Transaction, etc.)
-├── seed_data.py        # Creates sample data for testing
-├── requirements.txt    # Python dependencies
-│
-├── routes/             # URL handlers (organized by feature)
-│   ├── __init__.py
-│   ├── main.py         # Home page and dashboard
-│   ├── transactions.py # Add, edit, delete transactions
-│   └── accounts.py     # Manage accounts
-│
-├── templates/          # HTML templates (Jinja2)
-│   ├── base.html       # Base template with navigation
-│   ├── index.html      # Dashboard/home page
-│   ├── about.html      # About page
-│   ├── transactions/   # Transaction-related pages
-│   │   ├── list.html
-│   │   ├── add.html
-│   │   └── edit.html
-│   └── accounts/       # Account-related pages
-│       ├── list.html
-│       ├── add.html
-│       └── edit.html
-│
-└── finance.db          # SQLite database (created automatically)
+├── app.py                  # Main application entry point
+├── config.py               # Configuration settings
+├── models.py               # Database models
+├── routes/                 # Application routes
+│   ├── auth.py            # Authentication (login/register)
+│   ├── accounts.py        # Account management
+│   ├── transactions.py    # Transactions & transfers
+│   ├── categories.py      # Category management
+│   └── main.py            # Dashboard
+├── templates/             # HTML templates
+├── tests/                 # Unit tests (60 tests)
+└── docs/                  # Documentation
+
 ```
 
-## Quick Start
+## 🧪 Testing
 
-### 1. Create a Virtual Environment (Recommended)
+Run all tests:
+```bash
+poetry run pytest tests/ -v
+```
+
+Run specific tests:
+```bash
+# Just transfer feature tests
+poetry run pytest tests/test_transactions.py::TestTransferFeature -v
+
+# Just authentication tests
+poetry run pytest tests/test_auth.py -v
+```
+
+**Test Coverage**: 53/60 tests passing (88%)
+
+> **📖 Learn more:** See [TESTING_GUIDE.md](TESTING_GUIDE.md) for comprehensive testing documentation.
+
+## 🚢 Deployment
+
+Deploy to Render.com:
 
 ```bash
-# Create virtual environment
-python -m venv venv
-
-# Activate it
-# On macOS/Linux:
-source venv/bin/activate
-# On Windows:
-venv\Scripts\activate
+# Already configured with render.yaml
+# Just push to GitHub and connect to Render
 ```
 
-### 2. Install Dependencies
+The app includes:
+- ✅ Auto-configured PostgreSQL database
+- ✅ Auto-generated SECRET_KEY
+- ✅ Python 3.12 runtime
+- ✅ Gunicorn web server
+
+> **📖 Deployment guide:** See [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md)
+
+## 📚 Documentation
+
+### Essential Reading
+- **[QUICK_START.md](QUICK_START.md)** - Detailed setup instructions
+- **[DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md)** - Deploy to production
+- **[TESTING_GUIDE.md](TESTING_GUIDE.md)** - Understanding the test suite
+
+### Reference
+- **[POETRY_GUIDE.md](POETRY_GUIDE.md)** - Dependency management
+- **[tests/README.md](tests/README.md)** - Test documentation
+
+## 🛠️ Technology Stack
+
+| Category | Technology |
+|----------|-----------|
+| **Framework** | Flask 3.0 |
+| **Database** | SQLite (dev), PostgreSQL (prod) |
+| **ORM** | SQLAlchemy 2.0 |
+| **Authentication** | Flask-Login |
+| **Frontend** | Tailwind CSS |
+| **Charts** | Chart.js |
+| **Testing** | Pytest |
+| **Server** | Gunicorn |
+| **Deployment** | Render.com |
+
+## 🔐 Security Features
+
+- ✅ Password hashing (PBKDF2-SHA256)
+- ✅ User data separation (users can only see their own data)
+- ✅ Authentication required for all pages
+- ✅ Security headers middleware
+- ✅ Session management
+- ✅ CSRF protection
+
+## 🎯 Key Features Explained
+
+### Multi-Currency Support
+Track accounts in different currencies:
+```
+USD Account: $1,000
+THB Account: ฿35,000
+EUR Account: €500
+```
+
+### Transfer Between Accounts
+New feature! Transfer money between your accounts:
+1. Click "Transfer" button
+2. Select source and destination accounts
+3. Enter amount
+4. Creates linked transaction records
+5. Balances update automatically
+
+### Account Switching
+Edit a transaction and move it to a different account:
+- Old account balance adjusts
+- New account balance updates
+- Transaction history maintained
+
+## 📊 Database Schema
+
+```
+User
+├── Accounts
+│   └── Transactions
+└── Categories
+    └── Transactions
+```
+
+**Relationships:**
+- User has many Accounts
+- User has many Categories
+- Account has many Transactions
+- Category has many Transactions
+
+## 🤝 Contributing
+
+This is a personal learning project. Feel free to:
+- Report issues
+- Suggest features
+- Learn from the code
+- Fork for your own use
+
+## 📝 License
+
+This is a learning project. Use it as you wish!
+
+## 🙏 Acknowledgments
+
+- Built while learning web development
+- Uses industry-standard practices
+- Includes comprehensive testing
+- Production-ready deployment setup
+
+---
+
+## 📖 Quick Reference
+
+### Common Commands
 
 ```bash
-pip install -r requirements.txt
+# Development
+poetry run python app.py              # Run app
+poetry run pytest tests/ -v           # Run tests
+poetry env info                       # Check Python version
+
+# Dependencies
+poetry add <package>                  # Add new package
+poetry update                         # Update all packages
+poetry show                           # List installed packages
+
+# Production
+poetry run gunicorn "app:create_app()"  # Run with Gunicorn
 ```
 
-### 3. Run the App
+### Environment Variables
 
+Create `.env` file:
 ```bash
-python app.py
+SECRET_KEY=your-secret-key-here
+DATABASE_URL=sqlite:///finance.db     # or PostgreSQL URL
+FLASK_ENV=development                 # or production
 ```
 
-### 4. Open in Browser
+### File Locations
 
-Go to: **http://localhost:5000**
+| What | Where |
+|------|-------|
+| Main app | `app.py` |
+| Routes | `routes/*.py` |
+| Models | `models.py` |
+| Templates | `templates/` |
+| Tests | `tests/` |
+| Config | `config.py` |
 
-## How It Works
+---
 
-### The Request Flow
+**Made with ❤️ while learning Flask**
 
-```
-Browser Request → Flask (app.py) → Route Handler → Database Query → HTML Template → Response
-```
-
-1. User visits a URL (e.g., `/transactions/add`)
-2. Flask matches the URL to a route in `routes/transactions.py`
-3. The route function queries the database using models
-4. Data is passed to an HTML template
-5. Template renders with the data
-6. HTML is sent back to the browser
-
-### Key Concepts
-
-- **Flask**: A lightweight web framework for Python
-- **SQLAlchemy**: Converts Python classes to database tables (ORM)
-- **Jinja2**: Template engine that lets you use Python-like code in HTML
-- **Blueprints**: Way to organize routes into separate files
-
-## Next Steps for Learning
-
-1. **Add Authentication**: Let users log in with their own accounts
-2. **Add Budgets**: Set monthly spending limits per category
-3. **Add Charts**: Visualize spending with Chart.js
-4. **Add API**: Create REST endpoints for a mobile app
-5. **Add Tests**: Write unit tests for your routes
-
-## Common Commands
-
-```bash
-# Run the development server
-python app.py
-
-# Reset the database (delete and recreate)
-rm finance.db && python app.py
-
-# Install a new package
-pip install package_name
-pip freeze > requirements.txt
-```
-
-## Tech Stack
-
-- **Backend**: Python 3, Flask
-- **Database**: SQLite (development), PostgreSQL (production)
-- **ORM**: SQLAlchemy
-- **Frontend**: HTML, Tailwind CSS
-- **Templates**: Jinja2
+**Questions?** Check the documentation files above or the code comments.

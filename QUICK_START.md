@@ -1,389 +1,437 @@
-# 🚀 Quick Start: Deploy Your App in 30 Minutes
+# 🚀 Harit Finance - Quick Start Guide
 
-## TL;DR (Too Long; Didn't Read)
+**Get up and running in 10 minutes!**
 
-Your app is ready to deploy! Here's the fastest path:
-
-1. Create `.env` file with secret key (5 min)
-2. Push to GitHub (10 min)
-3. Deploy to Render.com (15 min)
-4. **Done!** Your app is online
+**📚 Navigation:** [README](README.md) | [Documentation Index](DOCUMENTATION_INDEX.md) | [Deployment](DEPLOYMENT_GUIDE.md) | [Testing](TESTING_GUIDE.md)
 
 ---
 
-## Step 1: Create Environment File (5 minutes)
+## 📋 Prerequisites
 
-### A. Generate a secret key
+Before you start, make sure you have:
 
+- ✅ **Python 3.10 or higher** ([Download](https://www.python.org/downloads/))
+- ✅ **Poetry** ([Install guide](POETRY_GUIDE.md))
+- ✅ **Git** (for version control)
+- ✅ **A text editor** (VS Code, Cursor, etc.)
+
+Check your Python version:
 ```bash
-python3 -c "import secrets; print(secrets.token_hex(32))"
+python3 --version  # Should be 3.10 or higher
 ```
 
-Copy the output (long random string).
+---
 
-### B. Create `.env` file
+## 🎯 Local Development Setup
+
+### Step 1: Install Dependencies (2 minutes)
 
 ```bash
+# Navigate to project directory
+cd /Users/harit/Projects/personal_finance_app
+
+# Install all dependencies with Poetry
+poetry install
+```
+
+This installs Flask, SQLAlchemy, pytest, and all other dependencies.
+
+---
+
+### Step 2: Create Environment File (1 minute)
+
+```bash
+# Copy the example file
 cp .env.example .env
 ```
 
-### C. Edit `.env`
+**Generate secret keys:**
+```bash
+# Generate SECRET_KEY
+python3 -c "import secrets; print(secrets.token_hex(32))"
 
-Open `.env` and paste your secret key:
-
+# Generate DB_ENCRYPTION_KEY  
+python3 -c "import secrets; print(secrets.token_hex(32))"
 ```
-SECRET_KEY=paste_your_secret_key_here
-DB_ENCRYPTION_KEY=generate_and_paste_another_key_here
+
+**Edit `.env` file:**
+```env
+SECRET_KEY=your_first_generated_key_here
+DB_ENCRYPTION_KEY=your_second_generated_key_here
+DATABASE_URL=sqlite:///finance.db
+FLASK_ENV=development
 ```
 
-**Important:** Never share this file or commit it to GitHub!
+> ⚠️ **Important:** Never commit `.env` to git! It's already in `.gitignore`.
 
 ---
 
-## Step 2: Push to GitHub (10 minutes)
-
-### A. Check your files
+### Step 3: Run the Application (1 minute)
 
 ```bash
-# Make sure you're in the project directory
-cd /Users/harit/Projects/personal_finance_app
-
-# Check what files you have
-ls -la
+poetry run python app.py
 ```
 
 You should see:
-- `app.py`
-- `config.py`
-- `requirements.txt`
-- `render.yaml`
-- `Procfile`
-- And more...
+```
+ * Running on http://127.0.0.1:5001
+ * Debug mode: on
+```
 
-### B. Initialize Git (if not already done)
+**Open your browser:** http://localhost:5001
+
+---
+
+### Step 4: Create Your Account
+
+1. Click **"Sign Up"**
+2. Enter your name, email, and password
+3. Click **"Create Account"**
+4. You're in! 🎉
+
+---
+
+## 🎮 Using the App
+
+### Create Your First Account
+
+1. Go to **"Accounts"** → **"+ Add Account"**
+2. Enter account details:
+   - Name: "My Checking"
+   - Type: Bank Account
+   - Currency: USD
+   - Initial Balance: 1000
+3. Click **"Create Account"**
+
+### Record a Transaction
+
+1. Go to **"Transactions"** → **"+ Add Transaction"**
+2. Choose **Expense** or **Income**
+3. Enter amount and details
+4. Click **"Add Transaction"**
+
+### Transfer Money ✨ NEW
+
+1. Go to **"Transactions"** → **"💸 Transfer"**
+2. Select **From Account** and **To Account**
+3. Enter amount
+4. Click **"Transfer Money"**
+
+Both account balances update automatically!
+
+### Create Categories
+
+1. Go to **"Categories"** → **"+ Add Category"**
+2. Choose type (Expense or Income)
+3. Add name and emoji icon (🍔 💰 🏠)
+4. Pick a color
+5. Click **"Create Category"**
+
+---
+
+## 🧪 Running Tests
+
+Verify everything works:
 
 ```bash
-# Initialize git repository
-git init
+# Run all tests
+poetry run pytest tests/ -v
 
-# Add all files
+# Run specific tests
+poetry run pytest tests/test_transactions.py -v
+
+# Run only transfer feature tests
+poetry run pytest tests/test_transactions.py::TestTransferFeature -v
+```
+
+**Expected:** 53-60 tests passing
+
+> 📖 **Learn more:** See [TESTING_GUIDE.md](TESTING_GUIDE.md) for detailed testing information.
+
+---
+
+## 🚢 Deploy to Production
+
+Ready to go live? Follow these steps:
+
+### Quick Deployment Checklist
+
+- [ ] Code is pushed to GitHub
+- [ ] Environment variables are set
+- [ ] Database is configured
+- [ ] SECRET_KEY is secure
+- [ ] Tests are passing
+
+> 📖 **Full deployment guide:** See [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md)
+
+### Deploy to Render.com (Recommended)
+
+1. **Push to GitHub**
+   ```bash
+   git add .
+   git commit -m "Ready for deployment"
+   git push origin main
+   ```
+
+2. **Create Render Account**
+   - Go to [render.com](https://render.com)
+   - Sign up with GitHub
+
+3. **Create Web Service**
+   - Click "New +" → "Web Service"
+   - Connect your GitHub repository
+   - Render auto-detects `render.yaml`
+   - Click "Create Web Service"
+
+4. **Wait for Deployment**
+   - First deployment takes 2-3 minutes
+   - Check build logs for progress
+
+5. **Your App is Live!** 🎉
+   - Access at: `your-app-name.onrender.com`
+
+---
+
+## 🛠️ Common Tasks
+
+### Update Dependencies
+
+```bash
+# Update all packages
+poetry update
+
+# Add a new package
+poetry add package-name
+
+# Remove a package
+poetry remove package-name
+```
+
+### Database Tasks
+
+```bash
+# Delete database (fresh start)
+rm finance.db
+
+# Database will be recreated on next run
+poetry run python app.py
+```
+
+### Switch Python Version
+
+```bash
+# Check current version
+poetry env info
+
+# Use different Python version
+poetry env use python3.11
+
+# Reinstall dependencies
+poetry install
+```
+
+---
+
+## 🔧 Development Workflow
+
+### Daily Development
+
+```bash
+# 1. Start the app
+poetry run python app.py
+
+# 2. Make changes to code
+# Edit files in routes/, templates/, models.py
+
+# 3. Test your changes
+poetry run pytest tests/ -v
+
+# 4. Commit your work
 git add .
-
-# Commit
-git commit -m "Initial commit: Ready for deployment"
+git commit -m "Description of changes"
 ```
 
-### C. Create GitHub repository
-
-1. Go to [github.com](https://github.com)
-2. Click the "+" icon (top right) → "New repository"
-3. Name it: `personal-finance-app`
-4. **Don't** check "Initialize with README" (you already have one)
-5. Click "Create repository"
-
-### D. Push your code
-
-GitHub will show you commands. Run:
+### Before Deploying
 
 ```bash
-git remote add origin https://github.com/YOUR_USERNAME/personal-finance-app.git
-git branch -M main
-git push -u origin main
+# Run tests
+poetry run pytest tests/ -v
+
+# Check for linter errors
+poetry run flake8 .  # if you have flake8 installed
+
+# Commit everything
+git add .
+git commit -m "Ready for deployment"
+git push
 ```
 
-Replace `YOUR_USERNAME` with your GitHub username.
+---
+
+## 📁 Important Files
+
+| File | Purpose |
+|------|---------|
+| **app.py** | Main application entry point |
+| **config.py** | Configuration settings |
+| **models.py** | Database models |
+| **routes/** | URL handlers and business logic |
+| **templates/** | HTML pages |
+| **tests/** | Unit tests |
+| **.env** | Environment variables (local only) |
+| **pyproject.toml** | Poetry dependencies |
+| **render.yaml** | Deployment configuration |
+
+> 📖 **Complete reference:** See [DOCUMENTATION_INDEX.md](DOCUMENTATION_INDEX.md)
 
 ---
 
-## Step 3: Deploy to Render.com (15 minutes)
+## 🆘 Troubleshooting
 
-### A. Sign up for Render
+### "pytest not found"
 
-1. Go to [render.com](https://render.com)
-2. Click "Get Started for Free"
-3. Sign up with GitHub (easiest)
+**Problem:** Running `pytest` doesn't work  
+**Solution:** Use `poetry run pytest tests/ -v`  
+**Why:** pytest is in Poetry's virtual environment
 
-### B. Create Web Service
+### "Database is locked"
 
-1. Click "New +" (top right)
-2. Select "Web Service"
-3. Click "Connect account" if needed
-4. Find your `personal-finance-app` repository
-5. Click "Connect"
-
-### C. Configure (Render auto-detects most settings)
-
-Render will read your `render.yaml` file and configure everything automatically!
-
-You should see:
-- **Name:** personal-finance-app
-- **Environment:** Python
-- **Build Command:** pip install -r requirements.txt
-- **Start Command:** gunicorn "app:create_app()"
-- **Plan:** Free
-
-### D. Add Environment Variables (Important!)
-
-Even though `render.yaml` generates SECRET_KEY automatically, double-check:
-
-1. Scroll down to "Environment Variables"
-2. Should see:
-   - `SECRET_KEY` (auto-generated)
-   - `DATABASE_URL` (from database)
-   - `FLASK_ENV` = production
-
-If not there, add them manually.
-
-### E. Deploy!
-
-1. Click "Deploy Web Service"
-2. Wait 5-10 minutes (watch the logs)
-3. When you see "Service is live 🎉", it's ready!
-
-### F. Get Your URL
-
-Render gives you a URL like:
-```
-https://personal-finance-app-xxxx.onrender.com
+**Problem:** Can't write to database  
+**Solution:** 
+```bash
+rm finance.db
+poetry run python app.py
 ```
 
-Click it to visit your live app!
+### "Import Error"
+
+**Problem:** Module not found errors  
+**Solution:**
+```bash
+poetry install  # Reinstall all dependencies
+```
+
+### "Port 5001 already in use"
+
+**Problem:** Another app is using port 5001  
+**Solution:** Kill the process or change port in `app.py`:
+```python
+app.run(debug=True, port=5002)  # Use different port
+```
+
+### Can't login after deployment
+
+**Problem:** Different SECRET_KEY  
+**Solution:** 
+- Render auto-generates SECRET_KEY
+- Just create a new account
+- Old accounts won't work (different encryption key)
 
 ---
 
-## Step 4: Test Your Live App (5 minutes)
+## 💡 Tips & Best Practices
 
-1. Visit your Render URL
-2. Click "Register" to create an account
-3. Add an account (e.g., "My Bank Account")
-4. Add a transaction
-5. Check that everything works!
+### Security
 
----
+✅ **DO:**
+- Use strong, random SECRET_KEY in production
+- Keep .env file private (never commit)
+- Use different SECRET_KEY for dev and production
+- Run tests before deploying
 
-## 🎉 Success!
+❌ **DON'T:**
+- Use default secret keys
+- Commit .env to git
+- Share your SECRET_KEY
+- Deploy without testing
 
-You now have a live personal finance app on the internet!
+### Development
 
-Share your URL with friends and family. They can create their own accounts and use it too!
+✅ **DO:**
+- Run tests frequently
+- Commit code regularly
+- Write descriptive commit messages
+- Test locally before deploying
 
----
-
-## Troubleshooting
-
-### "Application Error" message
-
-**Check the logs:**
-1. Go to Render dashboard
-2. Click on your service
-3. Click "Logs" tab
-4. Look for error messages
-
-**Common fixes:**
-- Redeploy: Click "Manual Deploy" → "Deploy latest commit"
-- Check environment variables are set
-- Make sure `SECRET_KEY` is configured
-
-### "Can't connect to database"
-
-**Fix:**
-1. Go to Render dashboard
-2. Make sure PostgreSQL database is created
-3. Check that web service is linked to database
-4. `DATABASE_URL` should be auto-set
-
-### CSS/Styles not loading
-
-**Fix:**
-1. Hard refresh your browser (Cmd+Shift+R on Mac, Ctrl+Shift+R on Windows)
-2. Check browser console for errors (F12 → Console tab)
-3. Make sure `static` folder is in your GitHub repository
-
-### "Build failed"
-
-**Fix:**
-1. Check `requirements.txt` exists in your repo
-2. Make sure you pushed all files to GitHub
-3. Check build logs for specific error
+❌ **DON'T:**
+- Skip testing
+- Make large uncommitted changes
+- Deploy untested code
+- Ignore error messages
 
 ---
 
-## What Happens After Deployment?
+## 🎯 What's Next?
 
-### Free Tier Limitations
+Now that you have the app running:
 
-On Render's free tier:
-- **Sleeps after 15 minutes** of inactivity
-- **Wakes up** when someone visits (takes ~30 seconds)
-- **Database:** Limited storage (500MB)
+1. ✅ **Explore Features**
+   - Create accounts
+   - Record transactions
+   - Try the transfer feature
+   - Set up categories
 
-**This is perfect for:**
-- Personal use
-- Learning
-- Showing friends/family
-- Portfolio projects
+2. ✅ **Understand the Code**
+   - Read [DOCUMENTATION_INDEX.md](DOCUMENTATION_INDEX.md)
+   - Browse `routes/` files
+   - Look at `templates/` files
+   - Study `tests/` to understand features
 
-**Upgrade when you need:**
-- Always-on service
-- More database storage
-- More concurrent users
-- Custom domain
+3. ✅ **Learn Testing**
+   - Read [TESTING_GUIDE.md](TESTING_GUIDE.md)
+   - Run individual tests
+   - Understand test patterns
 
----
-
-## Next Steps (Optional)
-
-### 1. Custom Domain (Advanced)
-
-Buy a domain (like `myfinanceapp.com`) and connect it to Render.
-
-**Where to buy:**
-- Namecheap (~$10/year)
-- Google Domains (~$12/year)
-- Cloudflare (~$10/year)
-
-### 2. Set Up Database Backups
-
-1. Go to Render dashboard
-2. Click on your PostgreSQL database
-3. Go to "Backups" tab
-4. Enable automatic backups
-
-### 3. Monitor Your App
-
-**Render Logs:**
-- Check for errors
-- See who's using your app
-- Debug issues
-
-**External Monitoring:**
-- [UptimeRobot](https://uptimerobot.com) - Free website monitoring
-- [Sentry](https://sentry.io) - Error tracking (free tier)
-
-### 4. Share Your App
-
-Your app is live! Share with:
-- Friends and family
-- On your resume/portfolio
-- Social media
-- Job applications
+4. ✅ **Deploy to Production**
+   - Follow [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md)
+   - Set up on Render.com
+   - Share with friends!
 
 ---
 
-## Cost Breakdown
+## 📚 Additional Resources
 
-### Current Setup (Free)
-- ✅ Render web service: **Free**
-- ✅ PostgreSQL database: **Free**
-- ✅ HTTPS/SSL: **Free** (automatic)
-- ✅ Subdom (`.onrender.com`): **Free**
+### Documentation
+- **[README.md](README.md)** - Project overview
+- **[DOCUMENTATION_INDEX.md](DOCUMENTATION_INDEX.md)** - Complete documentation map
+- **[DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md)** - Production deployment
+- **[TESTING_GUIDE.md](TESTING_GUIDE.md)** - Testing guide
+- **[POETRY_GUIDE.md](POETRY_GUIDE.md)** - Dependency management
 
-**Total: $0/month**
-
-### When to Upgrade
-
-**Upgrade to paid ($7/month) when:**
-- You want always-on (no sleep)
-- You have many users
-- You need more database storage
-- You want a custom domain
+### External Resources
+- [Flask Documentation](https://flask.palletsprojects.com/)
+- [SQLAlchemy Documentation](https://docs.sqlalchemy.org/)
+- [Poetry Documentation](https://python-poetry.org/docs/)
+- [Render Documentation](https://render.com/docs)
 
 ---
 
-## Important Notes
+## ✅ Quick Command Reference
 
-### ⚠️ Local Testing Note
+```bash
+# Development
+poetry run python app.py              # Run app
+poetry run pytest tests/ -v           # Run all tests
+poetry env info                       # Check environment
 
-Due to Python 3.14 compatibility issues, local testing might not work on your Mac. **This is fine!** Production (Render) uses Python 3.12 and works perfectly.
+# Dependencies
+poetry install                        # Install dependencies
+poetry add <package>                  # Add package
+poetry update                         # Update packages
 
-See `PYTHON_COMPATIBILITY_NOTE.md` for details.
+# Database
+rm finance.db                         # Delete database
+poetry run python app.py              # Recreate database
 
-### 🔒 Security
-
-Your app is secure with:
-- HTTPS encryption
-- Password hashing
-- Security headers
-- SQL injection protection
-- XSS protection
-
-### 💾 Data Persistence
-
-Your data is stored in PostgreSQL on Render. It persists across deployments and doesn't disappear when the app sleeps.
-
----
-
-## Getting Help
-
-### Render Documentation
-- [render.com/docs](https://render.com/docs)
-- [Python on Render](https://render.com/docs/deploy-flask)
-
-### Your Project Documentation
-1. **BEGINNER_CHECKLIST.md** - Step-by-step checklist
-2. **DEPLOYMENT_GUIDE.md** - Comprehensive guide with all options
-3. **SETUP_SUMMARY.md** - What we changed and why
-4. **This file** - Quick start guide
-
-### Community Help
-- [Stack Overflow](https://stackoverflow.com) (tag: flask, python, render)
-- [Render Community](https://community.render.com)
-- [Flask Discord](https://discord.gg/pallets)
+# Git
+git status                            # Check status
+git add .                             # Stage changes
+git commit -m "message"               # Commit
+git push                              # Push to GitHub
+```
 
 ---
 
-## Checklist
+**🎉 Congratulations!** You now have Harit Finance running locally. Happy tracking!
 
-Use this to track your progress:
-
-- [ ] Generated SECRET_KEY
-- [ ] Created `.env` file
-- [ ] Initialized Git repository
-- [ ] Committed all files
-- [ ] Created GitHub repository
-- [ ] Pushed code to GitHub
-- [ ] Signed up for Render.com
-- [ ] Connected GitHub to Render
-- [ ] Created web service
-- [ ] Configured environment variables
-- [ ] Deployed successfully
-- [ ] Tested registration
-- [ ] Tested adding accounts
-- [ ] Tested adding transactions
-- [ ] Shared URL with friends!
-
----
-
-## Final Tips
-
-1. **Save your URLs**
-   - GitHub repo: `https://github.com/USERNAME/personal-finance-app`
-   - Live app: `https://personal-finance-app-xxxx.onrender.com`
-   - Render dashboard: `https://dashboard.render.com`
-
-2. **Bookmark Render Dashboard**
-   - Check logs when things go wrong
-   - Monitor your app's health
-   - View database metrics
-
-3. **Make Changes**
-   - Edit code locally (or on GitHub)
-   - Commit: `git add . && git commit -m "Your changes"`
-   - Push: `git push`
-   - Render automatically redeploys!
-
-4. **Keep Learning**
-   - Add new features
-   - Improve the design
-   - Learn from errors
-   - Read the Flask documentation
-
----
-
-**You've got this! 🚀**
-
-Follow the steps above, and you'll have your app online in 30 minutes.
-
-Remember: If you get stuck, check the logs first. Most issues are simple misconfigurations that are easy to fix.
-
-Good luck!
+**Questions?** Check [DOCUMENTATION_INDEX.md](DOCUMENTATION_INDEX.md) for more guides.
