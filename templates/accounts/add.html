@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+
+{% block title %}Add Account - Personal Finance{% endblock %}
+
+{% block content %}
+<div class="max-w-xl mx-auto">
+    <h1 class="text-2xl font-bold mb-6">Add Account</h1>
+    
+    <form method="POST" class="bg-slate-800 rounded-xl border border-slate-700 p-6 space-y-6">
+        <!-- Name -->
+        <div>
+            <label for="name" class="block text-sm text-slate-400 mb-2">Account Name</label>
+            <input type="text" 
+                   name="name" 
+                   id="name"
+                   required
+                   placeholder="e.g., Chase Checking"
+                   class="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-3 text-white placeholder-slate-500 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
+        </div>
+        
+        <!-- Account Type -->
+        <div>
+            <label for="account_type" class="block text-sm text-slate-400 mb-2">Account Type</label>
+            <select name="account_type" 
+                    id="account_type" 
+                    required
+                    class="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-3 text-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
+                <option value="bank">🏦 Bank Account</option>
+                <option value="cash">💵 Cash</option>
+                <option value="savings">🐷 Savings</option>
+                <option value="credit">💳 Credit Card</option>
+                <option value="investment">📈 Investment</option>
+            </select>
+        </div>
+        
+        <!-- Currency -->
+        <div>
+            <label for="currency" class="block text-sm text-slate-400 mb-2">Currency</label>
+            <select name="currency" 
+                    id="currency"
+                    class="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-3 text-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
+                <option value="USD">USD - US Dollar</option>
+                <option value="THB">THB - Thai Baht</option>
+                <option value="EUR">EUR - Euro</option>
+                <option value="GBP">GBP - British Pound</option>
+                <option value="JPY">JPY - Japanese Yen</option>
+                <option value="CAD">CAD - Canadian Dollar</option>
+            </select>
+        </div>
+        
+        <!-- Initial Balance -->
+        <div>
+            <label for="balance" class="block text-sm text-slate-400 mb-2">Initial Balance</label>
+            <div class="relative">
+                <span id="currency_symbol" class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">$</span>
+                <input type="number" 
+                       name="balance" 
+                       id="balance"
+                       step="0.01"
+                       value="0"
+                       placeholder="0.00"
+                       class="w-full bg-slate-700 border border-slate-600 rounded-lg pl-8 pr-4 py-3 text-white placeholder-slate-500 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
+            </div>
+            <p class="text-xs text-slate-500 mt-1">
+                How much money is in this account right now?
+            </p>
+        </div>
+        
+        <!-- Starting Date -->
+        <div>
+            <label for="starting_date" class="block text-sm text-slate-400 mb-2">Balance Date</label>
+            <input type="date" 
+                   name="starting_date" 
+                   id="starting_date"
+                   required
+                   value="{{ today }}"
+                   class="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-3 text-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
+            <p class="text-xs text-slate-500 mt-1">
+                When did this account have this balance? (Usually today)
+            </p>
+        </div>
+        
+        <!-- Buttons -->
+        <div class="flex gap-4 pt-4">
+            <button type="submit" 
+                    class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-lg font-medium transition">
+                Create Account
+            </button>
+            <a href="{{ url_for('accounts.list_accounts') }}" 
+               class="px-6 py-3 border border-slate-600 rounded-lg text-slate-300 hover:bg-slate-700 transition">
+                Cancel
+            </a>
+        </div>
+    </form>
+</div>
+
+<script>
+// Update currency symbol when currency is selected
+const currencySelect = document.getElementById('currency');
+const currencySymbol = document.getElementById('currency_symbol');
+
+const currencySymbols = {
+    'USD': '$',
+    'THB': '฿',
+    'EUR': '€',
+    'GBP': '£',
+    'JPY': '¥',
+    'CAD': 'C$'
+};
+
+currencySelect.addEventListener('change', function() {
+    currencySymbol.textContent = currencySymbols[this.value] || this.value;
+});
+</script>
+{% endblock %}

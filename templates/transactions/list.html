@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block title %}My Transactions - Personal Finance{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Header -->
+    <div class="flex justify-between items-center">
+        <h1 class="text-2xl font-bold">Transactions</h1>
+        <a href="{{ url_for('transactions.add_transaction') }}" 
+           class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg transition">
+            + Add Transaction
+        </a>
+    </div>
+    
+    <!-- Transactions List -->
+    <div class="bg-slate-800 rounded-xl border border-slate-700">
+        {% if transactions %}
+        <div class="divide-y divide-slate-700">
+            {% for t in transactions %}
+            <div class="p-4 flex justify-between items-center hover:bg-slate-750">
+                <div class="flex items-center gap-4">
+                    <span class="text-2xl">{{ t.category.icon if t.category else '📦' }}</span>
+                    <div>
+                        <div class="font-medium">{{ t.description or 'No description' }}</div>
+                        <div class="text-sm text-slate-400">
+                            {{ t.category.name if t.category else 'Uncategorized' }} 
+                            · {{ t.account.name }} 
+                            · {{ t.date.strftime('%B %d, %Y') }}
+                            {% if t.location %} · 📍 {{ t.location }}{% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="text-lg font-semibold {% if t.amount >= 0 %}text-green-400{% else %}text-red-400{% endif %}">
+                        {% if t.amount >= 0 %}+{% endif %}{{ t.account.currency|currency_symbol }}{{ "%.2f"|format(t.amount|abs) }}
+                    </div>
+                    <div class="flex gap-2">
+                        <a href="{{ url_for('transactions.edit_transaction', id=t.id) }}" 
+                           class="text-slate-400 hover:text-white p-1">
+                            ✏️
+                        </a>
+                        <form action="{{ url_for('transactions.delete_transaction', id=t.id) }}" 
+                              method="POST" 
+                              onsubmit="return confirm('Delete this transaction?');"
+                              class="inline">
+                            <button type="submit" class="text-slate-400 hover:text-red-400 p-1">
+                                🗑️
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="p-12 text-center text-slate-500">
+            <div class="text-4xl mb-4">📭</div>
+            <p class="mb-4">No transactions yet</p>
+            <a href="{{ url_for('transactions.add_transaction') }}" 
+               class="text-indigo-400 hover:text-indigo-300">
+                Add your first transaction
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

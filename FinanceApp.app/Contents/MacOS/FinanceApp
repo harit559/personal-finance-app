@@ -1,0 +1,3 @@
+#!/bin/bash
+cd /Users/harit/Projects/personal_finance_app
+osascript -e 'tell application "Terminal" to do script "cd /Users/harit/Projects/personal_finance_app && ./start.sh"'

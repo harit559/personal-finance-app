@@ -1,0 +1,218 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - Personal Finance{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+    <!-- Welcome Header -->
+    <div>
+        <h1 class="text-3xl font-bold text-white">Welcome back! 👋</h1>
+        <p class="text-slate-400 mt-1">Here's your financial overview</p>
+    </div>
+    
+    <!-- Month Navigation -->
+    <div class="flex items-center justify-center gap-4">
+        <a href="?year={{ prev_year }}&month={{ prev_month }}" 
+           class="p-2 rounded-lg bg-slate-800 border border-slate-700 hover:bg-slate-700 transition">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+            </svg>
+        </a>
+        <div class="text-xl font-semibold min-w-[180px] text-center">
+            {{ month_name }}
+        </div>
+        {% if not is_current_month %}
+        <a href="?year={{ next_year }}&month={{ next_month }}" 
+           class="p-2 rounded-lg bg-slate-800 border border-slate-700 hover:bg-slate-700 transition">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+            </svg>
+        </a>
+        {% else %}
+        <div class="p-2 rounded-lg bg-slate-800/50 border border-slate-700 opacity-50 cursor-not-allowed">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+            </svg>
+        </div>
+        {% endif %}
+    </div>
+    
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Total Balance -->
+        <div class="bg-slate-800 rounded-xl p-6 border border-slate-700">
+            <div class="text-slate-400 text-sm mb-1">Balance end of {{ month_name }}</div>
+            <div class="text-3xl font-bold text-white">
+                {{ primary_currency|currency_symbol }}{{ "%.2f"|format(total_balance) }}
+            </div>
+        </div>
+        
+        <!-- Monthly Income -->
+        <div class="bg-slate-800 rounded-xl p-6 border border-slate-700">
+            <div class="text-slate-400 text-sm mb-1">Income in {{ month_name }}</div>
+            <div class="text-3xl font-bold text-green-400">
+                +{{ primary_currency|currency_symbol }}{{ "%.2f"|format(monthly_income) }}
+            </div>
+        </div>
+        
+        <!-- Monthly Spending -->
+        <div class="bg-slate-800 rounded-xl p-6 border border-slate-700">
+            <div class="text-slate-400 text-sm mb-1">Spent in {{ month_name }}</div>
+            <div class="text-3xl font-bold text-red-400">
+                -{{ primary_currency|currency_symbol }}{{ "%.2f"|format(monthly_spending) }}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Spending Chart & Accounts Row -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- Spending by Category Chart -->
+        <div class="bg-slate-800 rounded-xl border border-slate-700">
+            <div class="p-6 border-b border-slate-700">
+                <h2 class="text-xl font-semibold">Spending in {{ month_name }}</h2>
+            </div>
+            <div class="p-6">
+                {% if chart_data %}
+                <canvas id="spendingChart" width="400" height="300"></canvas>
+                {% else %}
+                <div class="text-center text-slate-500 py-12">
+                    <div class="text-4xl mb-4">📊</div>
+                    <p>No spending data this month yet</p>
+                    <a href="{{ url_for('transactions.add_transaction') }}" class="text-indigo-400">Add a transaction</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Accounts -->
+        <div class="bg-slate-800 rounded-xl border border-slate-700">
+            <div class="p-6 border-b border-slate-700 flex justify-between items-center">
+                <h2 class="text-xl font-semibold">Accounts</h2>
+                <a href="{{ url_for('accounts.add_account') }}" 
+                   class="text-sm text-indigo-400 hover:text-indigo-300">
+                    + Add Account
+                </a>
+            </div>
+            <div class="divide-y divide-slate-700">
+                {% for account in accounts %}
+                {% if account.balance_at_month is not none %}
+                <div class="p-4 flex justify-between items-center">
+                    <div>
+                        <div class="font-medium">{{ account.name }}</div>
+                        <div class="text-sm text-slate-400">{{ account.account_type|capitalize }}</div>
+                    </div>
+                    <div class="text-lg font-semibold {% if account.balance_at_month >= 0 %}text-white{% else %}text-red-400{% endif %}">
+                        {{ account.currency|currency_symbol }}{{ "%.2f"|format(account.balance_at_month) }}
+                    </div>
+                </div>
+                {% else %}
+                <div class="p-4 flex justify-between items-center opacity-50">
+                    <div>
+                        <div class="font-medium">{{ account.name }}</div>
+                        <div class="text-sm text-slate-400">Didn't exist yet</div>
+                    </div>
+                    <div class="text-lg font-semibold text-slate-500">
+                        —
+                    </div>
+                </div>
+                {% endif %}
+                {% else %}
+                <div class="p-6 text-center text-slate-500">
+                    No accounts yet. <a href="{{ url_for('accounts.add_account') }}" class="text-indigo-400">Add one!</a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Recent Transactions Row -->
+    <div class="grid grid-cols-1 gap-8">
+        <!-- Recent Transactions -->
+        <div class="bg-slate-800 rounded-xl border border-slate-700">
+            <div class="p-6 border-b border-slate-700 flex justify-between items-center">
+                <h2 class="text-xl font-semibold">Recent Transactions</h2>
+                <a href="{{ url_for('transactions.add_transaction') }}" 
+                   class="text-sm text-indigo-400 hover:text-indigo-300">
+                    + Add Transaction
+                </a>
+            </div>
+            <div class="divide-y divide-slate-700">
+                {% for t in recent_transactions[:5] %}
+                <div class="p-4 flex justify-between items-center">
+                    <div class="flex items-center gap-3">
+                        <span class="text-2xl">{{ t.category.icon if t.category else '📦' }}</span>
+                        <div>
+                            <div class="font-medium">{{ t.description or 'No description' }}</div>
+                            <div class="text-sm text-slate-400">
+                                {{ t.category.name if t.category else 'Uncategorized' }} · {{ t.date.strftime('%b %d') }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-lg font-semibold {% if t.amount >= 0 %}text-green-400{% else %}text-red-400{% endif %}">
+                        {% if t.amount >= 0 %}+{% endif %}{{ t.account.currency|currency_symbol }}{{ "%.2f"|format(t.amount|abs) }}
+                    </div>
+                </div>
+                {% else %}
+                <div class="p-6 text-center text-slate-500">
+                    No transactions yet. <a href="{{ url_for('transactions.add_transaction') }}" class="text-indigo-400">Add one!</a>
+                </div>
+                {% endfor %}
+            </div>
+            {% if recent_transactions|length > 5 %}
+            <div class="p-4 border-t border-slate-700 text-center">
+                <a href="{{ url_for('transactions.list_transactions') }}" 
+                   class="text-indigo-400 hover:text-indigo-300 text-sm">
+                    View all transactions →
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+{% if chart_data %}
+const ctx = document.getElementById('spendingChart').getContext('2d');
+new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+        labels: {{ chart_labels | tojson }},
+        datasets: [{
+            data: {{ chart_data | tojson }},
+            backgroundColor: {{ chart_colors | tojson }},
+            borderColor: '#1e293b',
+            borderWidth: 2
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                position: 'right',
+                labels: {
+                    color: '#cbd5e1',
+                    padding: 15,
+                    font: {
+                        size: 12
+                    }
+                }
+            },
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        const value = context.raw;
+                        const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                        const percentage = ((value / total) * 100).toFixed(1);
+                        return `$${value.toFixed(2)} (${percentage}%)`;
+                    }
+                }
+            }
+        }
+    }
+});
+{% endif %}
+</script>
+{% endblock %}

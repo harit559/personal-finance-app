@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Account - Personal Finance{% endblock %}
+
+{% block content %}
+<div class="max-w-xl mx-auto">
+    <h1 class="text-2xl font-bold mb-6">Edit Account</h1>
+    
+    <form method="POST" class="bg-slate-800 rounded-xl border border-slate-700 p-6 space-y-6">
+        <!-- Name -->
+        <div>
+            <label for="name" class="block text-sm text-slate-400 mb-2">Account Name</label>
+            <input type="text" 
+                   name="name" 
+                   id="name"
+                   value="{{ account.name }}"
+                   required
+                   class="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-3 text-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
+        </div>
+        
+        <!-- Account Type -->
+        <div>
+            <label for="account_type" class="block text-sm text-slate-400 mb-2">Account Type</label>
+            <select name="account_type" 
+                    id="account_type" 
+                    required
+                    class="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-3 text-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
+                <option value="bank" {% if account.account_type == 'bank' %}selected{% endif %}>🏦 Bank Account</option>
+                <option value="cash" {% if account.account_type == 'cash' %}selected{% endif %}>💵 Cash</option>
+                <option value="savings" {% if account.account_type == 'savings' %}selected{% endif %}>🐷 Savings</option>
+                <option value="credit" {% if account.account_type == 'credit' %}selected{% endif %}>💳 Credit Card</option>
+                <option value="investment" {% if account.account_type == 'investment' %}selected{% endif %}>📈 Investment</option>
+            </select>
+        </div>
+        
+        <!-- Current Balance (read-only) -->
+        <div>
+            <label class="block text-sm text-slate-400 mb-2">Current Balance</label>
+            <div class="bg-slate-700/50 border border-slate-600 rounded-lg px-4 py-3 text-slate-300">
+                ${{ "%.2f"|format(account.balance) }}
+                <span class="text-sm text-slate-500 ml-2">(Updated via transactions)</span>
+            </div>
+        </div>
+        
+        <!-- Currency -->
+        <div>
+            <label for="currency" class="block text-sm text-slate-400 mb-2">Currency</label>
+            <select name="currency" 
+                    id="currency"
+                    class="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-3 text-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
+                <option value="USD" {% if account.currency == 'USD' %}selected{% endif %}>USD - US Dollar</option>
+                <option value="THB" {% if account.currency == 'THB' %}selected{% endif %}>THB - Thai Baht</option>
+                <option value="EUR" {% if account.currency == 'EUR' %}selected{% endif %}>EUR - Euro</option>
+                <option value="GBP" {% if account.currency == 'GBP' %}selected{% endif %}>GBP - British Pound</option>
+                <option value="JPY" {% if account.currency == 'JPY' %}selected{% endif %}>JPY - Japanese Yen</option>
+                <option value="CAD" {% if account.currency == 'CAD' %}selected{% endif %}>CAD - Canadian Dollar</option>
+            </select>
+        </div>
+        
+        <!-- Buttons -->
+        <div class="flex gap-4 pt-4">
+            <button type="submit" 
+                    class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-lg font-medium transition">
+                Save Changes
+            </button>
+            <a href="{{ url_for('accounts.list_accounts') }}" 
+               class="px-6 py-3 border border-slate-600 rounded-lg text-slate-300 hover:bg-slate-700 transition">
+                Cancel
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}

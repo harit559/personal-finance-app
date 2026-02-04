@@ -1,0 +1,30 @@
+# Database - contains all user data!
+*.db
+finance.db
+
+# Virtual environment
+venv/
+.venv/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/
+
+# Environment variables (may contain secrets)
+.env
+.env.local
+
+# IDE settings
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Poetry cache (don't commit poetry.lock - it should be committed for reproducibility!)
+.poetry/

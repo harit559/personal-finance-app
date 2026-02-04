@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block title %}Add Category - Personal Finance{% endblock %}
+
+{% block content %}
+<div class="max-w-xl mx-auto">
+    <h1 class="text-2xl font-bold mb-6">Add Category</h1>
+    
+    <form method="POST" class="bg-slate-800 rounded-xl border border-slate-700 p-6 space-y-6">
+        <!-- Category Type -->
+        <div>
+            <label class="block text-sm text-slate-400 mb-2">Type</label>
+            <div class="flex gap-4">
+                <label class="flex items-center gap-2 cursor-pointer">
+                    <input type="radio" name="category_type" value="expense" checked 
+                           class="text-indigo-600 focus:ring-indigo-500">
+                    <span class="text-red-400">💸 Expense</span>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer">
+                    <input type="radio" name="category_type" value="income"
+                           class="text-indigo-600 focus:ring-indigo-500">
+                    <span class="text-green-400">💰 Income</span>
+                </label>
+            </div>
+        </div>
+        
+        <!-- Name -->
+        <div>
+            <label for="name" class="block text-sm text-slate-400 mb-2">Category Name</label>
+            <input type="text" 
+                   name="name" 
+                   id="name"
+                   required
+                   placeholder="e.g., Groceries, Rent, Salary"
+                   class="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-3 text-white placeholder-slate-500 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
+        </div>
+        
+        <!-- Icon -->
+        <div>
+            <label for="icon" class="block text-sm text-slate-400 mb-2">Icon (emoji)</label>
+            <input type="text" 
+                   name="icon" 
+                   id="icon"
+                   value="📦"
+                   maxlength="4"
+                   class="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-3 text-white text-2xl focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
+            <p class="text-xs text-slate-500 mt-1">
+                Tip: Press Ctrl+Cmd+Space on Mac to open emoji picker
+            </p>
+        </div>
+        
+        <!-- Color -->
+        <div>
+            <label for="color" class="block text-sm text-slate-400 mb-2">Color (for charts)</label>
+            <div class="flex gap-3 items-center">
+                <input type="color" 
+                       name="color" 
+                       id="color"
+                       value="#6366f1"
+                       class="w-16 h-10 rounded cursor-pointer bg-slate-700 border border-slate-600">
+                <span class="text-slate-400 text-sm">Pick a color</span>
+            </div>
+        </div>
+        
+        <!-- Buttons -->
+        <div class="flex gap-4 pt-4">
+            <button type="submit" 
+                    class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-lg font-medium transition">
+                Create Category
+            </button>
+            <a href="{{ url_for('categories.list_categories') }}" 
+               class="px-6 py-3 border border-slate-600 rounded-lg text-slate-300 hover:bg-slate-700 transition">
+                Cancel
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}

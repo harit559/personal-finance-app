@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Transaction - Personal Finance{% endblock %}
+
+{% block content %}
+<div class="max-w-xl mx-auto">
+    <h1 class="text-2xl font-bold mb-6">Edit Transaction</h1>
+    
+    <form method="POST" class="bg-slate-800 rounded-xl border border-slate-700 p-6 space-y-6">
+        <!-- Transaction Type -->
+        <div>
+            <label class="block text-sm text-slate-400 mb-2">Type</label>
+            <div class="flex gap-4">
+                <label class="flex items-center gap-2 cursor-pointer">
+                    <input type="radio" name="type" value="expense" 
+                           {% if transaction.amount < 0 %}checked{% endif %}
+                           class="text-indigo-600 focus:ring-indigo-500">
+                    <span class="text-red-400">💸 Expense</span>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer">
+                    <input type="radio" name="type" value="income"
+                           {% if transaction.amount >= 0 %}checked{% endif %}
+                           class="text-indigo-600 focus:ring-indigo-500">
+                    <span class="text-green-400">💰 Income</span>
+                </label>
+            </div>
+        </div>
+        
+        <!-- Amount -->
+        <div>
+            <label for="amount" class="block text-sm text-slate-400 mb-2">Amount</label>
+            <div class="relative">
+                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">{{ transaction.account.currency|currency_symbol }}</span>
+                <input type="number" 
+                       name="amount" 
+                       id="amount"
+                       step="0.01" 
+                       min="0.01"
+                       value="{{ transaction.amount|abs }}"
+                       required
+                       class="w-full bg-slate-700 border border-slate-600 rounded-lg pl-8 pr-4 py-3 text-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
+            </div>
+        </div>
+        
+        <!-- Category -->
+        <div>
+            <label for="category_id" class="block text-sm text-slate-400 mb-2">Category</label>
+            <select name="category_id" 
+                    id="category_id"
+                    class="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-3 text-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
+                <option value="">No category</option>
+                <optgroup label="Expenses">
+                    {% for cat in categories if cat.category_type == 'expense' %}
+                    <option value="{{ cat.id }}" {% if transaction.category_id == cat.id %}selected{% endif %}>
+                        {{ cat.icon }} {{ cat.name }}
+                    </option>
+                    {% endfor %}
+                </optgroup>
+                <optgroup label="Income">
+                    {% for cat in categories if cat.category_type == 'income' %}
+                    <option value="{{ cat.id }}" {% if transaction.category_id == cat.id %}selected{% endif %}>
+                        {{ cat.icon }} {{ cat.name }}
+                    </option>
+                    {% endfor %}
+                </optgroup>
+            </select>
+        </div>
+        
+        <!-- Date -->
+        <div>
+            <label for="date" class="block text-sm text-slate-400 mb-2">Date</label>
+            <input type="date" 
+                   name="date" 
+                   id="date"
+                   value="{{ transaction.date.strftime('%Y-%m-%d') }}"
+                   required
+                   class="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-3 text-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
+        </div>
+        
+        <!-- Description -->
+        <div>
+            <label for="description" class="block text-sm text-slate-400 mb-2">Description (optional)</label>
+            <input type="text" 
+                   name="description" 
+                   id="description"
+                   value="{{ transaction.description or '' }}"
+                   placeholder="What was this for?"
+                   class="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-3 text-white placeholder-slate-500 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
+        </div>
+        
+        <!-- Location -->
+        <div>
+            <label for="location" class="block text-sm text-slate-400 mb-2">Location (optional)</label>
+            <input type="text" 
+                   name="location" 
+                   id="location"
+                   value="{{ transaction.location or '' }}"
+                   placeholder="Where did you spend?"
+                   class="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-3 text-white placeholder-slate-500 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
+        </div>
+        
+        <!-- Buttons -->
+        <div class="flex gap-4 pt-4">
+            <button type="submit" 
+                    class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-lg font-medium transition">
+                Save Changes
+            </button>
+            <a href="{{ url_for('transactions.list_transactions') }}" 
+               class="px-6 py-3 border border-slate-600 rounded-lg text-slate-300 hover:bg-slate-700 transition">
+                Cancel
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}

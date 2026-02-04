@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}About - Personal Finance{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto text-center">
+    <h1 class="text-3xl font-bold mb-4">About This App</h1>
+    <p class="text-slate-400 mb-8">
+        A personal finance tracking app built with Flask and SQLite.
+        This is a learning project to understand web development concepts.
+    </p>
+    
+    <div class="bg-slate-800 rounded-xl p-6 border border-slate-700 text-left">
+        <h2 class="text-xl font-semibold mb-4">Technologies Used</h2>
+        <ul class="space-y-2 text-slate-300">
+            <li>🐍 <strong>Python</strong> - Programming language</li>
+            <li>🌶️ <strong>Flask</strong> - Web framework</li>
+            <li>🗃️ <strong>SQLite</strong> - Database</li>
+            <li>🔷 <strong>SQLAlchemy</strong> - ORM (Object-Relational Mapping)</li>
+            <li>🎨 <strong>Tailwind CSS</strong> - Styling</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

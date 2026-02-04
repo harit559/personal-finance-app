@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block title %}Accounts - Personal Finance{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Header -->
+    <div class="flex justify-between items-center">
+        <div>
+            <h1 class="text-2xl font-bold">Accounts</h1>
+            <p class="text-slate-400">Total: {{ accounts[0].currency|currency_symbol if accounts else '$' }}{{ "%.2f"|format(total_balance) }}</p>
+        </div>
+        <a href="{{ url_for('accounts.add_account') }}" 
+           class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg transition">
+            + Add Account
+        </a>
+    </div>
+    
+    <!-- Accounts Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {% for account in accounts %}
+        <div class="bg-slate-800 rounded-xl border border-slate-700 p-6">
+            <div class="flex justify-between items-start mb-4">
+                <div>
+                    <h3 class="font-semibold text-lg">{{ account.name }}</h3>
+                    <span class="text-sm text-slate-400">{{ account.account_type|capitalize }}</span>
+                </div>
+                <div class="flex gap-2">
+                    <a href="{{ url_for('accounts.edit_account', id=account.id) }}" 
+                       class="text-slate-400 hover:text-white">
+                        ✏️
+                    </a>
+                    <form action="{{ url_for('accounts.delete_account', id=account.id) }}" 
+                          method="POST"
+                          onsubmit="return confirm('Delete this account and all its transactions?');"
+                          class="inline">
+                        <button type="submit" class="text-slate-400 hover:text-red-400">
+                            🗑️
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <div class="text-2xl font-bold {% if account.balance >= 0 %}text-white{% else %}text-red-400{% endif %}">
+                {{ account.currency|currency_symbol }}{{ "%.2f"|format(account.balance) }}
+            </div>
+            <div class="text-xs text-slate-500 mt-2">{{ account.currency }}</div>
+        </div>
+        {% else %}
+        <div class="col-span-full bg-slate-800 rounded-xl border border-slate-700 p-12 text-center">
+            <div class="text-4xl mb-4">🏦</div>
+            <p class="text-slate-500 mb-4">No accounts yet</p>
+            <a href="{{ url_for('accounts.add_account') }}" 
+               class="text-indigo-400 hover:text-indigo-300">
+                Add your first account
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
