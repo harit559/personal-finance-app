@@ -31,13 +31,14 @@ def add_security_headers(app):
         if not app.debug:
             response.headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains'
         
-        # Content Security Policy (basic)
-        # This allows resources only from your domain
+        # Content Security Policy
+        # Allow trusted CDNs for Chart.js, Tailwind CSS, and Google Fonts
         response.headers['Content-Security-Policy'] = (
             "default-src 'self'; "
-            "script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com; "
-            "style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com; "
-            "font-src 'self' data:;"
+            "script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://cdn.jsdelivr.net; "
+            "style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://fonts.googleapis.com; "
+            "font-src 'self' data: https://fonts.gstatic.com; "
+            "connect-src 'self' https://cdn.jsdelivr.net;"
         )
         
         return response

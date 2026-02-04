@@ -66,20 +66,20 @@
                     id="category_id"
                     class="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-3 text-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
                 <option value="">No category</option>
-                <optgroup label="Expenses">
-                    {% for cat in categories if cat.category_type == 'expense' %}
-                    <option value="{{ cat.id }}" {% if transaction.category_id == cat.id %}selected{% endif %}>
-                        {{ cat.icon }} {{ cat.name }}
-                    </option>
-                    {% endfor %}
-                </optgroup>
-                <optgroup label="Income">
-                    {% for cat in categories if cat.category_type == 'income' %}
-                    <option value="{{ cat.id }}" {% if transaction.category_id == cat.id %}selected{% endif %}>
-                        {{ cat.icon }} {{ cat.name }}
-                    </option>
-                    {% endfor %}
-                </optgroup>
+                {% for cat in categories if cat.category_type == 'expense' %}
+                <option value="{{ cat.id }}" 
+                        data-type="expense"
+                        {% if transaction.category_id == cat.id %}selected{% endif %}>
+                    {{ cat.icon }} {{ cat.name }}
+                </option>
+                {% endfor %}
+                {% for cat in categories if cat.category_type == 'income' %}
+                <option value="{{ cat.id }}" 
+                        data-type="income"
+                        {% if transaction.category_id == cat.id %}selected{% endif %}>
+                    {{ cat.icon }} {{ cat.name }}
+                </option>
+                {% endfor %}
             </select>
         </div>
         
@@ -137,5 +137,46 @@
         const currency = selectedOption.getAttribute('data-currency') || '$';
         document.getElementById('currency-symbol').textContent = currency;
     });
+
+    // Filter categories based on transaction type
+    const typeRadios = document.querySelectorAll('input[name="type"]');
+    const categorySelect = document.getElementById('category_id');
+    const allCategoryOptions = Array.from(categorySelect.options);
+    
+    // Store the currently selected category
+    let currentlySelectedCategory = categorySelect.value;
+
+    function filterCategories() {
+        const selectedType = document.querySelector('input[name="type"]:checked').value;
+        
+        // Store current selection if it exists
+        currentlySelectedCategory = categorySelect.value;
+        
+        // Remove all options except "No category"
+        categorySelect.innerHTML = '<option value="">No category</option>';
+        
+        // Add back only matching categories
+        allCategoryOptions.forEach(option => {
+            if (option.value === '') return; // Skip the "No category" option
+            
+            const categoryType = option.getAttribute('data-type');
+            if (categoryType === selectedType) {
+                const newOption = option.cloneNode(true);
+                // Restore selection if it matches the type
+                if (option.value === currentlySelectedCategory) {
+                    newOption.selected = true;
+                }
+                categorySelect.appendChild(newOption);
+            }
+        });
+    }
+
+    // Add event listener to type radio buttons
+    typeRadios.forEach(radio => {
+        radio.addEventListener('change', filterCategories);
+    });
+
+    // Filter categories on page load based on current transaction type
+    filterCategories();
 </script>
 {% endblock %}

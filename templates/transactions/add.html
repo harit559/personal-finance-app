@@ -62,16 +62,12 @@
                     id="category_id"
                     class="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-3 text-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
                 <option value="">No category</option>
-                <optgroup label="Expenses">
-                    {% for cat in categories if cat.category_type == 'expense' %}
-                    <option value="{{ cat.id }}">{{ cat.icon }} {{ cat.name }}</option>
-                    {% endfor %}
-                </optgroup>
-                <optgroup label="Income">
-                    {% for cat in categories if cat.category_type == 'income' %}
-                    <option value="{{ cat.id }}">{{ cat.icon }} {{ cat.name }}</option>
-                    {% endfor %}
-                </optgroup>
+                {% for cat in categories if cat.category_type == 'expense' %}
+                <option value="{{ cat.id }}" data-type="expense">{{ cat.icon }} {{ cat.name }}</option>
+                {% endfor %}
+                {% for cat in categories if cat.category_type == 'income' %}
+                <option value="{{ cat.id }}" data-type="income">{{ cat.icon }} {{ cat.name }}</option>
+                {% endfor %}
             </select>
         </div>
         
@@ -153,5 +149,35 @@ if (accountSelect.value) {
     const currency = accountCurrencies[accountSelect.value];
     currencySymbol.textContent = currencySymbols[currency] || currency;
 }
+
+// Filter categories based on transaction type
+const typeRadios = document.querySelectorAll('input[name="type"]');
+const categorySelect = document.getElementById('category_id');
+const allCategoryOptions = Array.from(categorySelect.options);
+
+function filterCategories() {
+    const selectedType = document.querySelector('input[name="type"]:checked').value;
+    
+    // Remove all options except "No category"
+    categorySelect.innerHTML = '<option value="">No category</option>';
+    
+    // Add back only matching categories
+    allCategoryOptions.forEach(option => {
+        if (option.value === '') return; // Skip the "No category" option
+        
+        const categoryType = option.getAttribute('data-type');
+        if (categoryType === selectedType) {
+            categorySelect.appendChild(option.cloneNode(true));
+        }
+    });
+}
+
+// Add event listener to type radio buttons
+typeRadios.forEach(radio => {
+    radio.addEventListener('change', filterCategories);
+});
+
+// Filter categories on page load (default is expense)
+filterCategories();
 </script>
 {% endblock %}

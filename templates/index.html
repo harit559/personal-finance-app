@@ -72,13 +72,18 @@
                 <h2 class="text-xl font-semibold">Spending in {{ month_name }}</h2>
             </div>
             <div class="p-6">
-                {% if chart_data %}
-                <canvas id="spendingChart" width="400" height="300"></canvas>
+                {% if chart_data and chart_data|length > 0 %}
+                <div style="position: relative; height: 350px; width: 100%;">
+                    <canvas id="spendingChart"></canvas>
+                </div>
                 {% else %}
                 <div class="text-center text-slate-500 py-12">
                     <div class="text-4xl mb-4">📊</div>
                     <p>No spending data this month yet</p>
-                    <a href="{{ url_for('transactions.add_transaction') }}" class="text-indigo-400">Add a transaction</a>
+                    <p class="text-xs text-slate-600 mt-2">
+                        Add expense transactions with categories to see the chart
+                    </p>
+                    <a href="{{ url_for('transactions.add_transaction') }}" class="text-indigo-400 mt-4 inline-block">+ Add Transaction</a>
                 </div>
                 {% endif %}
             </div>
@@ -171,48 +176,111 @@
 </div>
 
 <!-- Chart.js -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script>
-{% if chart_data %}
-const ctx = document.getElementById('spendingChart').getContext('2d');
-new Chart(ctx, {
-    type: 'doughnut',
-    data: {
-        labels: {{ chart_labels | tojson }},
-        datasets: [{
-            data: {{ chart_data | tojson }},
-            backgroundColor: {{ chart_colors | tojson }},
-            borderColor: '#1e293b',
-            borderWidth: 2
-        }]
-    },
-    options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-            legend: {
-                position: 'right',
-                labels: {
-                    color: '#cbd5e1',
-                    padding: 15,
-                    font: {
-                        size: 12
+// Debug: Log chart data
+console.log('Chart Data:', {{ chart_data | tojson }});
+console.log('Chart Labels:', {{ chart_labels | tojson }});
+console.log('Chart Colors:', {{ chart_colors | tojson }});
+
+{% if chart_data and chart_data|length > 0 %}
+(function() {
+    'use strict';
+    
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initChart);
+    } else {
+        initChart();
+    }
+    
+    function initChart() {
+        const canvas = document.getElementById('spendingChart');
+        if (!canvas) {
+            console.error('Canvas element not found');
+            return;
+        }
+        
+        const ctx = canvas.getContext('2d');
+        if (!ctx) {
+            console.error('Could not get canvas context');
+            return;
+        }
+        
+        const currencySymbol = '{{ primary_currency|currency_symbol }}';
+        const chartData = {{ chart_data | tojson }};
+        const chartLabels = {{ chart_labels | tojson }};
+        const chartColors = {{ chart_colors | tojson }};
+        
+        console.log('Initializing chart with:', chartData.length, 'data points');
+        
+        try {
+            const chart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: chartLabels,
+                    datasets: [{
+                        data: chartData,
+                        backgroundColor: chartColors,
+                        borderColor: '#1e293b',
+                        borderWidth: 2,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: {
+                                color: '#cbd5e1',
+                                padding: 12,
+                                font: {
+                                    size: 13,
+                                    family: 'Inter, system-ui, -apple-system, sans-serif',
+                                    weight: '500'
+                                },
+                                boxWidth: 12,
+                                boxHeight: 12,
+                                usePointStyle: true
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(15, 23, 42, 0.95)',
+                            titleColor: '#cbd5e1',
+                            bodyColor: '#e2e8f0',
+                            borderColor: '#475569',
+                            borderWidth: 1,
+                            padding: 12,
+                            displayColors: true,
+                            bodyFont: {
+                                size: 13
+                            },
+                            callbacks: {
+                                label: function(context) {
+                                    const value = context.raw;
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = ((value / total) * 100).toFixed(1);
+                                    return ` ${currencySymbol}${value.toFixed(2)} (${percentage}%)`;
+                                }
+                            }
+                        }
+                    },
+                    animation: {
+                        animateRotate: true,
+                        animateScale: true,
+                        duration: 1000
                     }
                 }
-            },
-            tooltip: {
-                callbacks: {
-                    label: function(context) {
-                        const value = context.raw;
-                        const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                        const percentage = ((value / total) * 100).toFixed(1);
-                        return `$${value.toFixed(2)} (${percentage}%)`;
-                    }
-                }
-            }
+            });
+            console.log('Chart initialized successfully');
+        } catch (error) {
+            console.error('Error creating chart:', error);
         }
     }
-});
+})();
+{% else %}
+console.log('No chart data available');
 {% endif %}
 </script>
 {% endblock %}

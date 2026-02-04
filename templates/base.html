@@ -5,14 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Harit Finance{% endblock %}</title>
     
-    <!-- Tailwind CSS via CDN (for quick prototyping) -->
+    <!-- Google Fonts: Inter (Clean, modern, professional) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS via CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     fontFamily: {
-                        'sans': ['THSarabunNew', 'system-ui', 'sans-serif'],
+                        'sans': ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
                     }
                 }
             }
@@ -21,38 +26,11 @@
     
     <!-- Custom styles -->
     <style>
-        /* THSarabunNew Font - Local files */
-        @font-face {
-            font-family: 'THSarabunNew';
-            src: url('/static/fonts/THSarabunNew.ttf') format('truetype');
-            font-weight: 400;
-            font-style: normal;
-        }
-        
-        @font-face {
-            font-family: 'THSarabunNew';
-            src: url('/static/fonts/THSarabunNew Bold.ttf') format('truetype');
-            font-weight: 700;
-            font-style: normal;
-        }
-        
-        @font-face {
-            font-family: 'THSarabunNew';
-            src: url('/static/fonts/THSarabunNew Italic.ttf') format('truetype');
-            font-weight: 400;
-            font-style: italic;
-        }
-        
-        @font-face {
-            font-family: 'THSarabunNew';
-            src: url('/static/fonts/THSarabunNew BoldItalic.ttf') format('truetype');
-            font-weight: 700;
-            font-style: italic;
-        }
-        
-        /* Make the font larger since THSarabunNew renders small */
+        /* Inter font provides excellent readability */
         body {
-            font-size: 1.1em;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            font-optical-sizing: auto;
+            font-feature-settings: 'cv11', 'ss01', 'ss02';
         }
         
         /* Custom scrollbar */

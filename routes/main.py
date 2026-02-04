@@ -105,10 +105,15 @@ def index():
      .group_by(Category.id) \
      .all()
     
-    # Prepare chart data
-    chart_labels = [f"{row.icon} {row.name}" for row in spending_by_category]
-    chart_data = [abs(row.total) for row in spending_by_category]
-    chart_colors = [row.color for row in spending_by_category]
+    # Prepare chart data (only if there is spending data)
+    chart_labels = []
+    chart_data = []
+    chart_colors = []
+    
+    if spending_by_category:
+        chart_labels = [f"{row.icon} {row.name}" for row in spending_by_category]
+        chart_data = [abs(row.total) for row in spending_by_category]
+        chart_colors = [row.color for row in spending_by_category]
     
     # Month name for display
     month_name = first_of_month.strftime('%B %Y')
