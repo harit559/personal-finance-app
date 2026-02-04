@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+
+{% block title %}Transfer Between Accounts - Harit Finance{% endblock %}
+
+{% block content %}
+<div class="max-w-xl mx-auto">
+    <h1 class="text-2xl font-bold mb-6">💸 Transfer Between Accounts</h1>
+    
+    <form method="POST" class="bg-slate-800 rounded-xl border border-slate-700 p-6 space-y-6">
+        <!-- From Account -->
+        <div>
+            <label for="from_account_id" class="block text-sm text-slate-400 mb-2">From Account</label>
+            <select name="from_account_id" 
+                    id="from_account_id"
+                    required
+                    class="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-3 text-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
+                <option value="">Select source account...</option>
+                {% for account in accounts %}
+                <option value="{{ account.id }}" data-currency="{{ account.currency|currency_symbol }}">
+                    {{ account.name }} (Balance: {{ account.currency|currency_symbol }}{{ "%.2f"|format(account.balance) }})
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <!-- To Account -->
+        <div>
+            <label for="to_account_id" class="block text-sm text-slate-400 mb-2">To Account</label>
+            <select name="to_account_id" 
+                    id="to_account_id"
+                    required
+                    class="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-3 text-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
+                <option value="">Select destination account...</option>
+                {% for account in accounts %}
+                <option value="{{ account.id }}">
+                    {{ account.name }} (Balance: {{ account.currency|currency_symbol }}{{ "%.2f"|format(account.balance) }})
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <!-- Amount -->
+        <div>
+            <label for="amount" class="block text-sm text-slate-400 mb-2">Amount</label>
+            <div class="relative">
+                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" id="currency-symbol">$</span>
+                <input type="number" 
+                       name="amount" 
+                       id="amount"
+                       step="0.01" 
+                       min="0.01"
+                       required
+                       placeholder="0.00"
+                       class="w-full bg-slate-700 border border-slate-600 rounded-lg pl-8 pr-4 py-3 text-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
+            </div>
+        </div>
+        
+        <!-- Date -->
+        <div>
+            <label for="date" class="block text-sm text-slate-400 mb-2">Date</label>
+            <input type="date" 
+                   name="date" 
+                   id="date"
+                   value="{{ today }}"
+                   required
+                   class="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-3 text-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
+        </div>
+        
+        <!-- Description -->
+        <div>
+            <label for="description" class="block text-sm text-slate-400 mb-2">Description (optional)</label>
+            <input type="text" 
+                   name="description" 
+                   id="description"
+                   placeholder="e.g., Monthly savings transfer"
+                   class="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-3 text-white placeholder-slate-500 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
+        </div>
+        
+        <!-- Info Box -->
+        <div class="bg-blue-600/20 border border-blue-600/30 rounded-lg p-4">
+            <p class="text-blue-400 text-sm">
+                ℹ️ This will move money from one account to another. Both accounts will be updated accordingly.
+            </p>
+        </div>
+        
+        <!-- Buttons -->
+        <div class="flex gap-4 pt-4">
+            <button type="submit" 
+                    class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-lg font-medium transition">
+                Transfer Money
+            </button>
+            <a href="{{ url_for('transactions.list_transactions') }}" 
+               class="px-6 py-3 border border-slate-600 rounded-lg text-slate-300 hover:bg-slate-700 transition">
+                Cancel
+            </a>
+        </div>
+    </form>
+</div>
+
+<script>
+    // Update currency symbol when source account changes
+    document.getElementById('from_account_id').addEventListener('change', function() {
+        const selectedOption = this.options[this.selectedIndex];
+        const currency = selectedOption.getAttribute('data-currency') || '$';
+        document.getElementById('currency-symbol').textContent = currency;
+    });
+</script>
+{% endblock %}
