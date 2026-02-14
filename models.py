@@ -39,6 +39,10 @@ class User(UserMixin, db.Model):
     name = db.Column(db.String(100), nullable=False)
     created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
     
+    # Password reset fields
+    reset_token = db.Column(db.String(100), unique=True, nullable=True)
+    reset_token_expires = db.Column(db.DateTime, nullable=True)
+    
     # Relationships - these let you access related data easily
     # Example: user.accounts returns all accounts for this user
     accounts = db.relationship('Account', backref='user', lazy=True, cascade='all, delete-orphan')
@@ -52,6 +56,29 @@ class User(UserMixin, db.Model):
     def check_password(self, password):
         """Check if the provided password matches the hash."""
         return check_password_hash(self.password_hash, password)
+    
+    def generate_reset_token(self):
+        """Generate a secure token for password reset."""
+        import secrets
+        from datetime import timedelta
+        self.reset_token = secrets.token_urlsafe(32)
+        self.reset_token_expires = datetime.now(timezone.utc) + timedelta(hours=1)
+        return self.reset_token
+    
+    def verify_reset_token(self, token):
+        """Check if the reset token is valid and not expired."""
+        if not self.reset_token or not self.reset_token_expires:
+            return False
+        if self.reset_token != token:
+            return False
+        if datetime.now(timezone.utc) > self.reset_token_expires:
+            return False
+        return True
+    
+    def clear_reset_token(self):
+        """Clear the reset token after use."""
+        self.reset_token = None
+        self.reset_token_expires = None
     
     def __repr__(self):
         return f'<User {self.email}>'

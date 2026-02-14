@@ -17,6 +17,7 @@ python-dotenv = "1.0.0"
 watchdog = "3.0.0"
 pyopenssl = "24.0.0"
 gunicorn = "^25.0.1"
+flask-mail = "^0.10.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "8.0.0"

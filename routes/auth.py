@@ -113,3 +113,119 @@ def logout():
     logout_user()
     flash('You have been logged out.', 'info')
     return redirect(url_for('auth.login'))
+
+
+@auth_bp.route('/forgot-password', methods=['GET', 'POST'])
+def forgot_password():
+    """
+    Forgot password page.
+    User enters email, receives reset link.
+    """
+    if current_user.is_authenticated:
+        return redirect(url_for('main.index'))
+    
+    if request.method == 'POST':
+        email = request.form['email']
+        user = User.query.filter_by(email=email).first()
+        
+        if user:
+            # Generate reset token
+            token = user.generate_reset_token()
+            db.session.commit()
+            
+            # Send email
+            from flask_mail import Message
+            from flask import current_app
+            from app import mail
+            
+            reset_url = url_for('auth.reset_password', token=token, _external=True)
+            
+            msg = Message(
+                subject='Reset Your Password - Harit Finance',
+                sender=current_app.config['MAIL_DEFAULT_SENDER'],
+                recipients=[user.email]
+            )
+            msg.body = f'''Hello {user.name},
+
+You requested to reset your password. Click the link below to reset it:
+
+{reset_url}
+
+This link will expire in 1 hour.
+
+If you didn't request this, please ignore this email.
+
+Best regards,
+Harit Finance Team
+'''
+            msg.html = f'''
+<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+    <h2 style="color: #4f46e5;">Reset Your Password</h2>
+    <p>Hello {user.name},</p>
+    <p>You requested to reset your password. Click the button below to reset it:</p>
+    <p style="margin: 30px 0;">
+        <a href="{reset_url}" style="background-color: #4f46e5; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">
+            Reset Password
+        </a>
+    </p>
+    <p style="color: #64748b; font-size: 14px;">This link will expire in 1 hour.</p>
+    <p style="color: #64748b; font-size: 14px;">If you didn't request this, please ignore this email.</p>
+    <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 30px 0;">
+    <p style="color: #94a3b8; font-size: 12px;">Harit Finance - Your Personal Finance Manager</p>
+</div>
+'''
+            
+            try:
+                mail.send(msg)
+                flash('Password reset link sent! Check your email.', 'success')
+            except Exception as e:
+                flash(f'Error sending email. Please contact support. Error: {str(e)}', 'error')
+                # Clear the token if email fails
+                user.clear_reset_token()
+                db.session.commit()
+        else:
+            # Don't reveal if email exists (security best practice)
+            flash('If that email exists, a reset link has been sent.', 'info')
+        
+        return redirect(url_for('auth.login'))
+    
+    return render_template('auth/forgot_password.html')
+
+
+@auth_bp.route('/reset-password/<token>', methods=['GET', 'POST'])
+def reset_password(token):
+    """
+    Reset password page.
+    User clicks link from email, enters new password.
+    """
+    if current_user.is_authenticated:
+        return redirect(url_for('main.index'))
+    
+    # Find user by token
+    user = User.query.filter_by(reset_token=token).first()
+    
+    if not user or not user.verify_reset_token(token):
+        flash('Invalid or expired reset link.', 'error')
+        return redirect(url_for('auth.forgot_password'))
+    
+    if request.method == 'POST':
+        password = request.form['password']
+        confirm_password = request.form['confirm_password']
+        
+        if password != confirm_password:
+            flash('Passwords do not match.', 'error')
+            return render_template('auth/reset_password.html', token=token)
+        
+        if len(password) < 6:
+            flash('Password must be at least 6 characters.', 'error')
+            return render_template('auth/reset_password.html', token=token)
+        
+        # Update password
+        user.set_password(password)
+        user.clear_reset_token()
+        db.session.commit()
+        
+        flash('Password reset successful! Please log in.', 'success')
+        return redirect(url_for('auth.login'))
+    
+    return render_template('auth/reset_password.html', token=token)

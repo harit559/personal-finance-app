@@ -4,6 +4,113 @@ All notable changes to this project are documented here.
 
 ---
 
+## [1.0.4] - 2026-02-05
+
+### ✨ New Features
+
+#### Password Reset Functionality
+- **Added:** Complete "Forgot Password" feature
+- **How it works:**
+  - User clicks "Forgot Password?" on login page
+  - Enters email address
+  - Receives password reset link via email
+  - Link expires after 1 hour
+  - User enters new password
+  - Single-use secure tokens
+- **Email Support:**
+  - Gmail SMTP integration for development
+  - Ready for SendGrid migration for production
+  - Professional HTML email templates
+  - Secure token generation
+- **Security Features:**
+  - Tokens expire in 1 hour
+  - One-time use tokens
+  - Secure random token generation (32 characters)
+  - Passwords hashed with pbkdf2:sha256
+  - Doesn't reveal if email exists (security best practice)
+
+### 🔧 Technical Changes
+
+#### Database Model
+- **Updated:** `User` model with reset token fields
+  - `reset_token`: Stores secure reset token
+  - `reset_token_expires`: Token expiration timestamp
+- **Added Methods:**
+  - `generate_reset_token()`: Creates secure token
+  - `verify_reset_token()`: Validates token and expiration
+  - `clear_reset_token()`: Removes token after use
+
+#### Email Configuration
+- **Added:** Flask-Mail integration
+- **Config:** Email settings in `config.py`
+  - `MAIL_SERVER`: SMTP server
+  - `MAIL_PORT`: SMTP port (587 for TLS)
+  - `MAIL_USE_TLS`: Enable TLS encryption
+  - `MAIL_USERNAME`: Email account
+  - `MAIL_PASSWORD`: App password or API key
+  - `MAIL_DEFAULT_SENDER`: Default sender address
+
+#### New Routes
+- **GET/POST** `/auth/forgot-password`: Request password reset
+- **GET/POST** `/auth/reset-password/<token>`: Reset password with token
+
+#### New Templates
+- **`auth/forgot_password.html`**: Email entry form
+- **`auth/reset_password.html`**: New password entry form
+- **Updated:** `auth/login.html` with "Forgot password?" link
+
+### 📚 Documentation
+
+- **Added:** `EMAIL_SETUP.md` - Complete Gmail SMTP setup guide
+  - Step-by-step instructions
+  - 2FA and app password setup
+  - Troubleshooting section
+  - Security best practices
+  - `.env` configuration examples
+
+- **Updated:** `PRODUCTION_OPTIMIZATION.md`
+  - Added SendGrid migration guide
+  - Comparison: Gmail vs SendGrid
+  - Custom domain setup instructions
+  - When to switch to SendGrid
+  - Migration checklist
+  - Added Flask-Migrate setup guide
+  - Database migration best practices
+  - Step-by-step migration workflow
+  - Production deployment with migrations
+  - Troubleshooting guide
+
+### 🔒 Security
+
+- **Token Security:**
+  - 32-character random tokens (using `secrets.token_urlsafe()`)
+  - Stored in database with expiration timestamp
+  - Single-use only (cleared after password reset)
+  - 1-hour expiration window
+- **Email Security:**
+  - TLS encryption for email sending
+  - App passwords (not real Gmail password)
+  - `.env` file for credentials (in `.gitignore`)
+- **User Privacy:**
+  - Doesn't reveal if email exists in system
+  - Generic success message for all submissions
+
+### 🎨 User Experience
+
+- **Intuitive Flow:**
+  - "Forgot password?" link prominently placed
+  - Clear instructions at each step
+  - Professional email design
+  - Helpful error messages
+  - Password requirements displayed
+- **Email Design:**
+  - HTML formatted email with styling
+  - Clear call-to-action button
+  - Fallback plain text version
+  - Branded messaging ("Harit Finance")
+
+---
+
 ## [1.0.3] - 2026-02-05
 
 ### ✨ New Features

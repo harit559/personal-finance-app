@@ -15,13 +15,15 @@ Then open http://localhost:5000 in your browser.
 import os
 from flask import Flask
 from flask_login import LoginManager
+from flask_mail import Mail
 from config import config
 from models import db, User
 from utils import get_currency_symbol
 from middleware import add_security_headers
 
-# Create login manager instance
+# Create login manager and mail instances
 login_manager = LoginManager()
+mail = Mail()
 
 
 def create_app(config_name=None):
@@ -50,6 +52,9 @@ def create_app(config_name=None):
     
     # Initialize database with the app
     db.init_app(app)
+    
+    # Initialize mail
+    mail.init_app(app)
     
     # Initialize login manager
     login_manager.init_app(app)
