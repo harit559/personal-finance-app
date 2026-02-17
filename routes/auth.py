@@ -220,6 +220,10 @@ def reset_password(token):
             flash('Password must be at least 6 characters.', 'error')
             return render_template('auth/reset_password.html', token=token)
         
+        if user.check_password(password):
+            flash('New password must be different from your current password.', 'error')
+            return render_template('auth/reset_password.html', token=token)
+        
         # Update password
         user.set_password(password)
         user.clear_reset_token()
