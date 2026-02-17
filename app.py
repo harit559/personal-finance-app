@@ -20,8 +20,9 @@ from config import config
 from models import db, User
 from utils import get_currency_symbol
 from middleware import add_security_headers
+from extensions import csrf, limiter
 
-# Create login manager and mail instances
+# Create instances
 login_manager = LoginManager()
 mail = Mail()
 
@@ -47,6 +48,13 @@ def create_app(config_name=None):
     # Load configuration
     app.config.from_object(config.get(config_name, config['default']))
     
+    # Production: fail fast if required env vars are missing
+    if config_name == 'production':
+        if not app.config.get('SECRET_KEY') or app.config['SECRET_KEY'] == 'dev-secret-key-change-me':
+            raise ValueError('SECRET_KEY must be set in production. Add it to Render environment variables.')
+        if not app.config.get('SQLALCHEMY_DATABASE_URI'):
+            raise ValueError('DATABASE_URL must be set in production. Render provides this for linked databases.')
+    
     # Add security headers
     add_security_headers(app)
     
@@ -55,6 +63,12 @@ def create_app(config_name=None):
     
     # Initialize mail
     mail.init_app(app)
+    
+    # CSRF protection (disabled in testing)
+    csrf.init_app(app)
+    
+    # Rate limiting (disabled in testing)
+    limiter.init_app(app)
     
     # Initialize login manager
     login_manager.init_app(app)

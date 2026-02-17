@@ -29,7 +29,9 @@ def add_account():
         from datetime import datetime
         
         initial_balance = float(request.form.get('balance', 0))
-        starting_date_str = request.form['starting_date']
+        starting_date_str = request.form.get('starting_date')
+        if not starting_date_str:
+            starting_date_str = datetime.now().strftime('%Y-%m-%d')
         starting_date = datetime.strptime(starting_date_str, '%Y-%m-%d').date()
         
         account = Account(

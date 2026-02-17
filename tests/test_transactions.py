@@ -142,7 +142,7 @@ class TestUpdateTransaction:
         """Test updating transaction amount."""
         account_id = user_with_accounts['account1_id']
         
-        # Create transaction
+        # Create transaction (and update account balance to match)
         with app.app_context():
             account = Account.query.get(account_id)
             initial_balance = account.balance
@@ -154,6 +154,7 @@ class TestUpdateTransaction:
                 date=date.today()
             )
             db.session.add(transaction)
+            account.balance += transaction.amount  # Sync balance with transaction
             db.session.commit()
             transaction_id = transaction.id
             # Balance is now initial_balance - 50

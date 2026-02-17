@@ -6,11 +6,22 @@ Handles user authentication using Flask-Login.
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_user, logout_user, login_required, current_user
 from models import db, User, Category, Account
+from extensions import limiter
+from utils import validate_password
 
 auth_bp = Blueprint('auth', __name__)
 
 
+def _is_safe_redirect(target):
+    """Validate redirect URL to prevent open redirect attacks."""
+    if not target or not target.strip():
+        return False
+    # Only allow relative URLs (same origin)
+    return target.startswith('/') and not target.startswith('//')
+
+
 @auth_bp.route('/login', methods=['GET', 'POST'])
+@limiter.limit("5 per minute")
 def login():
     """
     Login page.
@@ -34,8 +45,11 @@ def login():
             flash(f'Welcome back, {user.name}!', 'success')
             
             # Redirect to the page they were trying to access, or home
+            # Validate next to prevent open redirect attacks
             next_page = request.args.get('next')
-            return redirect(next_page if next_page else url_for('main.index'))
+            if next_page and _is_safe_redirect(next_page):
+                return redirect(next_page)
+            return redirect(url_for('main.index'))
         else:
             flash('Invalid email or password.', 'error')
     
@@ -43,6 +57,7 @@ def login():
 
 
 @auth_bp.route('/register', methods=['GET', 'POST'])
+@limiter.limit("3 per minute")
 def register():
     """
     Registration page.
@@ -53,13 +68,23 @@ def register():
         return redirect(url_for('main.index'))
     
     if request.method == 'POST':
-        name = request.form['name']
-        email = request.form['email']
-        password = request.form['password']
+        name = request.form.get('name', '').strip()
+        email = request.form.get('email', '').strip()
+        password = request.form.get('password', '')
         
-        # Check if email already exists
+        if not name or not email or not password:
+            flash('Name, email, and password are required.', 'error')
+            return render_template('auth/register.html')
+        
+        # Validate password
+        valid, msg = validate_password(password)
+        if not valid:
+            flash(msg, 'error')
+            return render_template('auth/register.html')
+        
+        # Check if email already exists (generic message to prevent enumeration)
         if User.query.filter_by(email=email).first():
-            flash('Email already registered.', 'error')
+            flash('An account with this email already exists. Try logging in.', 'error')
             return render_template('auth/register.html')
         
         # Create new user
@@ -100,22 +125,25 @@ def register():
         
         db.session.commit()
         
+        # Ensure user is NOT logged in - they must log in explicitly
+        logout_user()
         flash('Account created! Please log in.', 'success')
         return redirect(url_for('auth.login'))
     
     return render_template('auth/register.html')
 
 
-@auth_bp.route('/logout')
+@auth_bp.route('/logout', methods=['POST'])
 @login_required
 def logout():
-    """Log out the current user."""
+    """Log out the current user. POST only to prevent CSRF logout attacks."""
     logout_user()
     flash('You have been logged out.', 'info')
     return redirect(url_for('auth.login'))
 
 
 @auth_bp.route('/forgot-password', methods=['GET', 'POST'])
+@limiter.limit("3 per minute")
 def forgot_password():
     """
     Forgot password page.
@@ -177,9 +205,9 @@ Harit Finance Team
             
             try:
                 mail.send(msg)
-                flash('Password reset link sent! Check your email.', 'success')
-            except Exception as e:
-                flash(f'Error sending email. Please contact support. Error: {str(e)}', 'error')
+                flash('If that email exists, a reset link has been sent. Check your inbox.', 'success')
+            except Exception:
+                flash('Unable to send email. Please try again later or contact support.', 'error')
                 # Clear the token if email fails
                 user.clear_reset_token()
                 db.session.commit()
@@ -216,8 +244,9 @@ def reset_password(token):
             flash('Passwords do not match.', 'error')
             return render_template('auth/reset_password.html', token=token)
         
-        if len(password) < 6:
-            flash('Password must be at least 6 characters.', 'error')
+        valid, msg = validate_password(password)
+        if not valid:
+            flash(msg, 'error')
             return render_template('auth/reset_password.html', token=token)
         
         if user.check_password(password):

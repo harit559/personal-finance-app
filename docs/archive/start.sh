@@ -1,7 +1,6 @@
 #!/bin/bash
-
 # Personal Finance App - Startup Script
-# Run this with: ./start.sh
+# Archived: Use `poetry run python app.py` instead (see README.md)
 
 # Colors for output
 GREEN='\033[0;32m'

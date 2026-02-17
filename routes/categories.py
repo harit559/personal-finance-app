@@ -36,10 +36,16 @@ def list_categories():
 def add_category():
     """Add a new category."""
     if request.method == 'POST':
+        name = request.form.get('name', '').strip()
+        category_type = request.form.get('category_type', '').strip()
+        if not name or not category_type:
+            flash('Name and type are required.', 'error')
+            return render_template('categories/add.html')
+        
         category = Category(
             user_id=current_user.id,
-            name=request.form['name'],
-            category_type=request.form['category_type'],
+            name=name,
+            category_type=category_type,
             icon=request.form.get('icon', '📦'),
             color=request.form.get('color', '#6366f1')
         )
@@ -107,6 +113,11 @@ def delete_category(id):
                 # Set transactions to no category
                 Transaction.query.filter_by(category_id=id).update({'category_id': None})
             elif new_category_id:
+                # Ownership check: new category must belong to current user
+                new_cat = db.session.get(Category, int(new_category_id))
+                if not new_cat or new_cat.user_id != current_user.id:
+                    flash('Invalid category selected for migration.', 'error')
+                    return redirect(url_for('categories.delete_category', id=id))
                 # Migrate to selected category
                 Transaction.query.filter_by(category_id=id).update({'category_id': int(new_category_id)})
         

@@ -45,6 +45,10 @@ class TestUserRegistration:
             assert user is not None
             assert user.name == 'Test User'
             assert user.check_password('password123')
+        
+        # User should NOT be logged in - must log in explicitly
+        response = client.get('/accounts/')
+        assert response.status_code == 302  # Redirect to login
     
     def test_register_duplicate_email(self, client, app):
         """Test that registering with duplicate email fails."""
@@ -143,8 +147,8 @@ class TestUserLogout:
             'password': 'password123'
         })
         
-        # Logout
-        response = client.get('/auth/logout', follow_redirects=True)
+        # Logout (POST only for CSRF protection)
+        response = client.post('/auth/logout', follow_redirects=True)
         html = response.data.decode()
         
         # Should redirect to login page

@@ -72,10 +72,12 @@
                     </a>
                     <span class="text-slate-500">|</span>
                     <span class="text-slate-400">{{ current_user.name }}</span>
-                    <a href="{{ url_for('auth.logout') }}" 
-                       class="text-red-400 hover:text-red-300 transition">
-                        Logout
-                    </a>
+                    <form method="POST" action="{{ url_for('auth.logout') }}" class="inline">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                        <button type="submit" class="text-red-400 hover:text-red-300 transition bg-transparent border-none cursor-pointer p-0 font-inherit">
+                            Logout
+                        </button>
+                    </form>
                     {% else %}
                     <a href="{{ url_for('auth.login') }}" 
                        class="text-slate-300 hover:text-white transition">

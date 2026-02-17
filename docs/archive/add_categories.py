@@ -1,6 +1,8 @@
 """
 One-time script to add default categories to existing users who don't have any.
-Run this once: python add_categories.py
+
+ARCHIVED: New users get default categories on registration. Run only if needed:
+    python add_categories.py
 """
 from app import create_app
 from models import db, User, Category, Account

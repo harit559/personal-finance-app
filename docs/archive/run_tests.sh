@@ -1,5 +1,6 @@
 #!/bin/bash
 # Script to run tests for Harit Finance app
+# Archived: Use `poetry run pytest tests/ -v` instead (see README.md)
 
 echo "🧪 Running Harit Finance Test Suite..."
 echo "======================================"

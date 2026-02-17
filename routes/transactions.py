@@ -43,12 +43,34 @@ def add_transaction():
     """
     if request.method == 'POST':
         # Get data from the form
-        amount = float(request.form['amount'])
+        amount_str = request.form.get('amount')
+        date_str = request.form.get('date')
+        if not amount_str or not date_str:
+            flash('Amount and date are required.', 'error')
+            accounts = Account.query.filter_by(user_id=current_user.id).all()
+            categories = Category.query.filter_by(user_id=current_user.id).all()
+            today = datetime.now().strftime('%Y-%m-%d')
+            return render_template('transactions/add.html',
+                                   accounts=accounts, categories=categories, today=today)
+        
+        amount = float(amount_str)
         description = request.form.get('description', '')
-        date_str = request.form['date']
         account_id = int(request.form['account_id'])
         category_id = request.form.get('category_id')
         transaction_type = request.form['type']  # 'income' or 'expense'
+        
+        # Ownership check: account must belong to current user
+        account = db.session.get(Account, account_id)
+        if not account or account.user_id != current_user.id:
+            flash('Invalid account selected.', 'error')
+            return redirect(url_for('transactions.add_transaction'))
+        
+        # Ownership check: category must belong to current user (if provided)
+        if category_id:
+            category = db.session.get(Category, int(category_id))
+            if not category or category.user_id != current_user.id:
+                flash('Invalid category selected.', 'error')
+                return redirect(url_for('transactions.add_transaction'))
         
         # Convert date string to date object
         date = datetime.strptime(date_str, '%Y-%m-%d').date()
@@ -72,8 +94,7 @@ def add_transaction():
             location=location
         )
         
-        # Update account balance
-        account = db.session.get(Account, account_id)
+        # Update account balance (account already validated above)
         if account:
             account.balance += amount
         
@@ -148,11 +169,19 @@ def edit_transaction(id):
             if new_account:
                 new_account.balance = new_account.balance - old_amount + new_amount
         
+        # Ownership check: category must belong to current user (if provided)
+        new_category_id = request.form.get('category_id')
+        if new_category_id:
+            cat = db.session.get(Category, int(new_category_id))
+            if not cat or cat.user_id != current_user.id:
+                flash('Invalid category selected.', 'error')
+                return redirect(url_for('transactions.edit_transaction', id=id))
+        
         # Update transaction fields
         transaction.amount = new_amount
         transaction.description = request.form.get('description', '')
         transaction.date = datetime.strptime(request.form['date'], '%Y-%m-%d').date()
-        transaction.category_id = request.form.get('category_id') or None
+        transaction.category_id = int(new_category_id) if new_category_id else None
         transaction.location = request.form.get('location', '')
         
         db.session.commit()

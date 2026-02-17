@@ -35,6 +35,7 @@
         </div>
         
         <form method="POST" class="space-y-4">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
             <div class="space-y-3">
                 <!-- Option: Move to another category -->
                 {% if other_categories %}
@@ -97,6 +98,7 @@
         </div>
         
         <form method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
             <input type="hidden" name="new_category_id" value="none">
             <div class="flex gap-4">
                 <button type="submit" 

@@ -50,6 +50,7 @@
                               method="POST" 
                               onsubmit="return confirm('Delete this transaction?');"
                               class="inline">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
                             <button type="submit" class="text-slate-400 hover:text-red-400 p-1">
                                 🗑️
                             </button>

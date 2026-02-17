@@ -11,8 +11,17 @@ BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 class Config:
     """Base configuration - shared by all environments."""
     
-    # Secret key for session security
+    # Secret key for session security (required in production)
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'dev-secret-key-change-me'
+    
+    # Session cookie security
+    SESSION_COOKIE_HTTPONLY = True
+    SESSION_COOKIE_SAMESITE = 'Lax'
+    PERMANENT_SESSION_LIFETIME = 86400  # 24 hours
+    
+    # CSRF protection (Flask-WTF)
+    WTF_CSRF_ENABLED = True
+    WTF_CSRF_TIME_LIMIT = 3600  # 1 hour
     
     # Disable modification tracking (saves memory)
     SQLALCHEMY_TRACK_MODIFICATIONS = False
@@ -44,17 +53,17 @@ class ProductionConfig(Config):
     DEBUG = False
     TESTING = False
     
-    # Use PostgreSQL in production
-    # Render/Heroku provide DATABASE_URL automatically
-    database_url = os.environ.get('DATABASE_URL')
+    # No fallback - must be set via environment
+    SECRET_KEY = os.environ.get('SECRET_KEY')
     
-    # Fix for Heroku's postgres:// vs postgresql:// issue
+    # Secure cookies (HTTPS only)
+    SESSION_COOKIE_SECURE = True
+    
+    # Use PostgreSQL in production (no fallback)
+    database_url = os.environ.get('DATABASE_URL')
     if database_url and database_url.startswith('postgres://'):
         database_url = database_url.replace('postgres://', 'postgresql://', 1)
-    
-    SQLALCHEMY_DATABASE_URI = database_url or 'postgresql://user:password@localhost/financedb'
-    
-    # Note: Make sure to set SECRET_KEY environment variable in production!
+    SQLALCHEMY_DATABASE_URI = database_url or None
 
 
 class TestingConfig(Config):
@@ -67,6 +76,9 @@ class TestingConfig(Config):
     
     # Disable CSRF for testing
     WTF_CSRF_ENABLED = False
+    
+    # Disable rate limiting for testing
+    RATELIMIT_ENABLED = False
 
 
 # Configuration dictionary

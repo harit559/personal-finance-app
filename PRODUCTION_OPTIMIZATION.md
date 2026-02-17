@@ -4,6 +4,22 @@
 
 ---
 
+## Deploy to Render (Quick Start)
+
+1. **Push to GitHub** – Connect your repo to [Render](https://render.com)
+2. **New Web Service** – Render auto-detects from `render.yaml`
+3. **Add env vars** – `SECRET_KEY`, `DATABASE_URL`, `MAIL_*` (for password reset)
+4. **Deploy** – Render builds and runs `gunicorn "app:create_app()"`
+
+**Pre-deploy checklist:**
+- [ ] `poetry add gunicorn` and `poetry export -f requirements.txt -o requirements.txt --without-hashes`
+- [ ] Generate `SECRET_KEY`: `python -c "import secrets; print(secrets.token_hex(32))"`
+- [ ] Link PostgreSQL in Render (or use `fromDatabase` in `render.yaml`)
+
+See [EMAIL_SETUP.md](EMAIL_SETUP.md) for Gmail SMTP. For Tailwind/SendGrid/migrations, read on.
+
+---
+
 ## ⚠️ Current Development Setup
 
 Your app currently uses **CDN links** for easy development:

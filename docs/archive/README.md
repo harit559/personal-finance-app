@@ -1,41 +1,24 @@
-# 📦 Archived Documentation
+# Archived Files
 
-This folder contains old documentation files that have been consolidated into the main documentation.
+Old docs and scripts kept for reference. Use the main docs instead:
 
-## Why These Were Archived
+- **[README.md](../../README.md)** – Setup, run, test, deploy
+- **[PRODUCTION_OPTIMIZATION.md](../../PRODUCTION_OPTIMIZATION.md)** – Deploy, Tailwind, SendGrid, migrations
+- **[EMAIL_SETUP.md](../../EMAIL_SETUP.md)** – Gmail SMTP for password reset
 
-These files contained:
-- Duplicate information (now in main docs)
-- Outdated setup instructions (updated in QUICK_START.md)
-- Historical notes (no longer relevant)
-- Scattered information (now organized)
+## Archived Scripts
 
-## Main Documentation
+| File | Reason |
+|------|--------|
+| `run_tests.sh` | Use `poetry run pytest tests/ -v` (README) |
+| `start.sh` | Use `poetry run python app.py` (README) |
+| `encrypt_database.py` | Encryption reverted (see DATABASE_ENCRYPTION_STATUS.md) |
+| `migrate_accounts.py` | One-time migration for old DBs |
+| `add_categories.py` | One-time script; new users get defaults on signup |
 
-**Please use the updated documentation:**
+## Archived Docs
 
-- **[README.md](../../README.md)** - Project overview
-- **[DOCUMENTATION_INDEX.md](../../DOCUMENTATION_INDEX.md)** - Complete documentation map
-- **[QUICK_START.md](../../QUICK_START.md)** - Setup guide
-- **[DEPLOYMENT_GUIDE.md](../../DEPLOYMENT_GUIDE.md)** - Production deployment
-- **[TESTING_GUIDE.md](../../TESTING_GUIDE.md)** - Testing guide
-
-## Archived Files
-
-These files are kept for reference but are no longer maintained:
-
-- `START_HERE.md` - Replaced by README.md
-- `SETUP_SUMMARY.md` - Replaced by QUICK_START.md
-- `BEGINNER_CHECKLIST.md` - Merged into README.md
-- `PYTHON_VERSION_UPDATES.md` - Info in POETRY_GUIDE.md
-- `PYTHON_COMPATIBILITY_NOTE.md` - Info in POETRY_GUIDE.md
-- `MIGRATION_SUMMARY.md` - Historical
-- `DATABASE_ENCRYPTION_STATUS.md` - Historical
-- `ENCRYPTION_SETUP.md` - Historical
-- `FONTS_GUIDE.md` - Reference only
-- `POETRY_EXAMPLE.md` - Merged into POETRY_GUIDE.md
-- `UPDATING_DEPENDENCIES.md` - Info in POETRY_GUIDE.md
-
----
-
-**Last Updated:** February 4, 2026
+| File | Reason |
+|------|--------|
+| `CHANGES_SUMMARY.txt` | See CHANGELOG.md |
+| `DEPLOYMENT_GUIDE.md` | Merged into PRODUCTION_OPTIMIZATION.md |

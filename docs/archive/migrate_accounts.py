@@ -1,12 +1,8 @@
 """
 Migration script to add starting_balance and starting_date to existing accounts.
 
-Run this once after updating the code:
-    python migrate_accounts.py
-
-This will set:
-- starting_balance = current balance
-- starting_date = earliest transaction date (or today if no transactions)
+ARCHIVED: One-time migration. New accounts get these fields by default.
+Run only if you have an old database: python migrate_accounts.py
 """
 from app import create_app
 from models import db, Account, Transaction
