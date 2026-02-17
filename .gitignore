@@ -28,3 +28,11 @@ Thumbs.db
 
 # Poetry cache (don't commit poetry.lock - it should be committed for reproducibility!)
 .poetry/
+
+# Tailwind standalone binary (used for local build only)
+tailwindcss-macos-arm64
+tailwindcss-macos-x64
+tailwindcss-linux-*
+
+# Node.js
+node_modules/

@@ -13,7 +13,7 @@ To run the app:
 Then open http://localhost:5000 in your browser.
 """
 import os
-from flask import Flask
+from flask import Flask, send_from_directory
 from flask_login import LoginManager
 from flask_mail import Mail
 from config import config
@@ -85,6 +85,15 @@ def create_app(config_name=None):
     app.register_blueprint(accounts_bp, url_prefix='/accounts')
     app.register_blueprint(categories_bp, url_prefix='/categories')
     app.register_blueprint(auth_bp, url_prefix='/auth')
+    
+    # Favicon route (prevents 404 for /favicon.ico)
+    @app.route('/favicon.ico')
+    def favicon():
+        return send_from_directory(
+            os.path.join(app.root_path, 'static'),
+            'favicon.svg',
+            mimetype='image/svg+xml'
+        )
     
     # Create database tables if they don't exist
     with app.app_context():
